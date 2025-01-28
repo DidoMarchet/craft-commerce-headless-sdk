@@ -35,7 +35,7 @@ Once Craft CMS Commerce is ready, you can use the modules below to handle specif
 
 This section provides details on configuring Craft CMS for headless usage, including CORS setup and other necessary settings.
 
-- [Configuration](./doc/CCONFIGURATION.md)
+- [Configuration](./doc/CONFIGURATION.md)
 
 ---
 
