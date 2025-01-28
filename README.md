@@ -1,6 +1,6 @@
 # Craft Commerce Headless SDK Documentation Index
 
-Welcome to the SDK documentation! This SDK is designed to simplify integration with **Craft CMS Commerce**, offering specialized modules for users, carts, payments, subscriptions, and more. Whether you're building a headless e-commerce application or enhancing an existing Craft CMS Commerce setup, this guide will help you navigate and implement the SDK effectively.
+This SDK is designed to simplify integration with **Craft CMS Commerce**, offering specialized modules for users, carts, payments, subscriptions, and more. Whether you're building a headless e-commerce application or enhancing an existing Craft CMS Commerce setup, this guide will help you navigate and implement the SDK effectively.
 
 > **Note:** Craft Commerce version 4 or higher is required for compatibility with this SDK.
 
@@ -35,7 +35,7 @@ Once Craft CMS Commerce is ready, you can use the modules below to handle specif
 
 This section provides details on configuring Craft CMS for headless usage, including CORS setup and other necessary settings.
 
-- [Configuration](./CONFIGURATION.md)
+- [Configuration](./doc/CCONFIGURATION.md)
 
 ---
 
