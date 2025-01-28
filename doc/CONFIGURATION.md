@@ -12,6 +12,7 @@ This guide provides detailed instructions to configure Craft CMS for optimal use
 ## Requirements
 
 - **Craft CMS Pro**: A Pro license is required for full SDK functionality.
+- **Craft Commerce**: Version 4 or higher is required for compatibility with the SDK.
 
 ---
 

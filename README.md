@@ -2,6 +2,27 @@
 
 Welcome to the SDK documentation! This SDK is designed to simplify integration with **Craft CMS Commerce**, offering specialized modules for users, carts, payments, subscriptions, and more. Whether you're building a headless e-commerce application or enhancing an existing Craft CMS Commerce setup, this guide will help you navigate and implement the SDK effectively.
 
+> **Note:** Craft Commerce version 4 or higher is required for compatibility with this SDK.
+
+---
+
+## Demo and Local Testing
+
+You can see a working demo of the SDK at this link:  
+[https://craft-commerce-headless-sdk.netlify.app/](https://craft-commerce-headless-sdk.netlify.app/)
+
+If you want to test the SDK locally, follow these steps:
+1. Clone the repository.
+2. Navigate to the `demo` folder.
+3. Run the following commands:
+   ```bash
+   npm install
+   npm run dev
+   ```
+   This will start the demo locally.
+
+---
+
 ## Getting Started
 
 Before using the SDK, ensure that Craft CMS and Craft CMS Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
@@ -99,3 +120,4 @@ Manage subscriptions, including plan creation, cancellations, switching, and rea
   - [switchPlan](./doc/SUBSCRIPTIONS.md#switchplan)
   - [reactivate](./doc/SUBSCRIPTIONS.md#reactivate)
 - [Examples](./doc/SUBSCRIPTIONS.md#examples)
+
