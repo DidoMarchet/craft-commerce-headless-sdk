@@ -19,13 +19,7 @@ If you want to test the SDK locally, follow these steps:
    npm install
    npm run dev
    ```
-   This will start the demo locally.
-
----
-
-## Getting Started
-
-Before using the SDK, ensure that Craft CMS and Craft CMS Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
+   This will start the demo locally.Bene Before using the SDK, ensure that Craft CMS and Craft CMS Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
 
 Once Craft CMS Commerce is ready, you can use the modules below to handle specific e-commerce actions, each designed to interact seamlessly with Craft CMS Commerce features.
 
@@ -36,6 +30,8 @@ Once Craft CMS Commerce is ready, you can use the modules below to handle specif
 This section provides details on configuring Craft CMS for headless usage, including CORS setup and other necessary settings.
 
 - [Configuration](./doc/CONFIGURATION.md)
+
+Once Craft CMS Commerce is ready, you can use the modules below to handle specific e-commerce actions, each designed to interact seamlessly with Craft CMS Commerce features.
 
 ---
 
@@ -120,4 +116,24 @@ Manage subscriptions, including plan creation, cancellations, switching, and rea
   - [switchPlan](./doc/SUBSCRIPTIONS.md#switchplan)
   - [reactivate](./doc/SUBSCRIPTIONS.md#reactivate)
 - [Examples](./doc/SUBSCRIPTIONS.md#examples)
+
+---
+
+## Suggestions for Craft CMS Improvements
+
+While this SDK provides extensive functionality, there are a few additional features that would greatly enhance the integration experience if included directly in Craft CMS or Craft Commerce:
+
+- **Include Available Payment Gateways in the Cart**: Similar to how shipping methods are returned, having payment gateways listed directly in the cart data would streamline the checkout process and improve integration ease.
+
+- **Return User-Associated Addresses**: Adding a feature to retrieve addresses associated with a user, similar to the `getInfo` method for session data, would simplify managing user information in headless implementations.
+
+These improvements would make Craft Commerce even more robust and developer-friendly for headless e-commerce use cases.
+
+
+
+
+
+
+
+
 
