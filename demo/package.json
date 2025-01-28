@@ -8,9 +8,10 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^5.2.0",
     "@vitejs/plugin-basic-ssl": "^1.2.0",
-    "localtunnel": "^2.0.2",
-    "@stripe/stripe-js": "^5.2.0"
+    "craft-commerce-headless-sdk": "^1.0.0",
+    "localtunnel": "^2.0.2"
   },
   "devDependencies": {
     "vite": "^4.0.0"
