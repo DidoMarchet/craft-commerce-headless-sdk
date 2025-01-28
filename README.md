@@ -6,6 +6,20 @@ This SDK is designed to simplify integration with **Craft CMS Commerce**, offeri
 
 ---
 
+## Table of Contents
+
+1. [Demo and Local Testing](#demo-and-local-testing)
+2. [Craft CMS Configuration Guide](#craft-cms-configuration-guide)
+3. [Client Module](#client-module)
+4. [Users Module](#users-module)
+5. [Cart Module](#cart-module)
+6. [Payment Sources Module](#payment-sources-module)
+7. [Payment Module](#payment-module)
+8. [Subscriptions Module](#subscriptions-module)
+9. [Suggestions for Craft CMS Improvements](#suggestions-for-craft-cms-improvements)
+
+---
+
 ## Demo and Local Testing
 
 You can see a working demo of the SDK at this link:  
@@ -20,8 +34,6 @@ If you want to test the SDK locally, follow these steps:
    npm run dev
    ```
    This will start the demo locally.Bene Before using the SDK, ensure that Craft CMS and Craft CMS Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
-
-Once Craft CMS Commerce is ready, you can use the modules below to handle specific e-commerce actions, each designed to interact seamlessly with Craft CMS Commerce features.
 
 ---
 
@@ -125,15 +137,4 @@ While this SDK provides extensive functionality, there are a few additional feat
 
 - **Include Available Payment Gateways in the Cart**: Similar to how shipping methods are returned, having payment gateways listed directly in the cart data would streamline the checkout process and improve integration ease.
 
-- **Return User-Associated Addresses**: Adding a feature to retrieve addresses associated with a user, similar to the `getInfo` method for session data, would simplify managing user information in headless implementations.
-
-These improvements would make Craft Commerce even more robust and developer-friendly for headless e-commerce use cases.
-
-
-
-
-
-
-
-
-
+- **Return User-Associated Addresses**: Adding a feature to retrieve addresses associated with a user, similar to the `actions/users/session-info` method for session data, would simplify managing user information in headless implementations.
