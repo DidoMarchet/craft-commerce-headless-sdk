@@ -33,7 +33,7 @@ For a comprehensive understanding of the underlying functionalities, refer to th
 Import the `subscriptions` module from the SDK:
 
 ```typescript
-import { craftCommerceHeadlessSdk } from 'path-to-sdk';
+import { craftCommerceHeadlessSdk } from 'craft-commerce-headless-sdk';
 
 const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 ```

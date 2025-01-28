@@ -25,7 +25,7 @@ The `client` module allows you to make `GET` and `POST` requests to custom endpo
 Import the `craftCommerceHeadlessSdk` function:
 
 ```typescript
-import { craftCommerceHeadlessSdk } from 'path-to-sdk';
+import { craftCommerceHeadlessSdk } from 'craft-commerce-headless-sdk';
 
 const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 ```
@@ -105,7 +105,7 @@ const response = await sdk.client.get(
 ## Examples
 
 ```typescript
-import { craftCommerceHeadlessSdk } from 'path-to-sdk';
+import { craftCommerceHeadlessSdk } from 'craft-commerce-headless-sdk';
 
 const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 
