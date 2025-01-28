@@ -10,5 +10,5 @@
     "declarationDir": "dist",
     "outDir": "dist"
   },
-  "include": ["src"]
+  "include": []
 }

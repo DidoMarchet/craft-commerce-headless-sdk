@@ -3,30 +3,20 @@
   "version": "1.0.0",
   "description": "Craft Commerce Headless SDK provides tools to integrate Craft Commerce in headless environments, focusing on building API-driven checkout experiences.",
   "main": "./dist/craft-commerce-headless-sdk.umd.js",
-  "module": "./dist/craft-commerce-headless-sdk.esm.js",
+  "module": "./dist/craft-commerce-headless-sdk.es.js",
   "exports": {
     ".": {
-      "import": "./dist/craft-commerce-headless-sdk.esm.js",
+      "import": "./dist/craft-commerce-headless-sdk.es.js",
       "require": "./dist/craft-commerce-headless-sdk.umd.js"
     }
   },
-  "files": [
-    "dist"
-  ],
   "typings": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint src --fix",
+    "lint": "eslint --fix",
     "format": "prettier --write .",
     "check": "npm run lint && npm run format"
-  },
-  "peerDependencies": {
-    "vue": "^v3.5.13"
-  },
-  "dependencies": {
-    "@vitejs/plugin-basic-ssl": "^1.2.0",
-    "localtunnel": "^2.0.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.14.0",

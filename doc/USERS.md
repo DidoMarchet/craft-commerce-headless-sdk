@@ -5,6 +5,7 @@ The `users` module provides methods to interact with user-related actions in Cra
 For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Controller Actions Documentation](https://craftcms.com/docs/5.x/reference/controller-actions.html).
 
 ### Key Features
+
 - Login and manage users.
 - Handle user addresses.
 - Reset and update passwords.
@@ -47,6 +48,7 @@ const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 Log in a user.
 
 #### Example
+
 ```typescript
 const response = await sdk.users.loginUser({
   loginName: 'user@example.com',
@@ -55,6 +57,7 @@ const response = await sdk.users.loginUser({
 ```
 
 #### Parameters
+
 - **`loginName`**: The user's login name or email.
 - **`password`**: The user's password.
 - **`rememberMe`**: Optional. Whether to remember the user (0/1).
@@ -66,6 +69,7 @@ const response = await sdk.users.loginUser({
 Create or update a user profile.
 
 #### Example
+
 ```typescript
 const response = await sdk.users.saveUser({
   firstName: 'John',
@@ -75,6 +79,7 @@ const response = await sdk.users.saveUser({
 ```
 
 #### Parameters
+
 - **`currentPassword`**: The user’s current password, required if email or newPassword are sent.
 - **`email`**: The user’s email address (optional).
 - **`fieldsLocation`**: Parameter name under which Craft will look for custom field data (defaults to fields).
@@ -98,6 +103,7 @@ const response = await sdk.users.saveUser({
 Upload a profile photo for a user.
 
 #### Example
+
 ```typescript
 const response = await sdk.users.uploadUserPhoto({
   userId: 123,
@@ -106,6 +112,7 @@ const response = await sdk.users.uploadUserPhoto({
 ```
 
 #### Parameters
+
 - **`userId`**: The ID of the user.
 - **`photo`**: A File object containing the photo.
 
@@ -116,6 +123,7 @@ const response = await sdk.users.uploadUserPhoto({
 Send a password reset email.
 
 #### Example
+
 ```typescript
 const response = await sdk.users.sendPasswordResetEmail({
   loginName: 'user@example.com',
@@ -123,6 +131,7 @@ const response = await sdk.users.sendPasswordResetEmail({
 ```
 
 #### Parameters
+
 - **`loginName`**: The user's login name or email (optional).
 - **`userId`**: The ID of the user to send the password reset email for (optional).
 
@@ -133,6 +142,7 @@ const response = await sdk.users.sendPasswordResetEmail({
 Set a new password for a user.
 
 #### Example
+
 ```typescript
 const response = await sdk.users.setPassword({
   code: 'reset-code',
@@ -142,6 +152,7 @@ const response = await sdk.users.setPassword({
 ```
 
 #### Parameters
+
 - **`code`**: Password reset code.
 - **`id`**: The user's ID.
 - **`newPassword`**: The new password.
@@ -155,6 +166,7 @@ const response = await sdk.users.setPassword({
 The `saveAddress` method allows creating or updating a user's address. Use this method to manage billing and shipping addresses or to label addresses for easy identification.
 
 #### Example: Create a New Address
+
 ```typescript
 const response = await sdk.users.saveAddress({
   fullName: 'Mario Rossi',
@@ -172,6 +184,7 @@ console.log('Address created:', response);
 ```
 
 #### Example: Update an Existing Address
+
 ```typescript
 const response = await sdk.users.saveAddress({
   addressId: 123, // ID of the existing address
@@ -190,6 +203,7 @@ console.log('Address updated:', response);
 ```
 
 #### Parameters
+
 - **`addressId`**: The ID of the address to update (optional).
 - **`userId`**: Owner of the new address (optional).
 - **`fullName`**: Name for the address.
@@ -211,13 +225,15 @@ console.log('Address updated:', response);
 Delete a user's address.
 
 #### Example
+
 ```typescript
-const response = await sdk.users.deleteAddress({ 
-  addressId: 1
+const response = await sdk.users.deleteAddress({
+  addressId: 1,
 });
 ```
 
 #### Parameters
+
 - **`addressId`**: The ID of the address to delete.
 
 ---
@@ -227,14 +243,17 @@ const response = await sdk.users.deleteAddress({
 Retrieve the current session information.
 
 #### Example
+
 ```typescript
 const response = await sdk.users.getSessionInfo();
 ```
 
 #### Parameters
+
 None.
 
 #### Notes
+
 - To optimize session management and reduce repeated server requests, you can store the session state in a cookie. For instance, save a flag like `isLoggedIn` or `sessionUser` in a client-side cookie or local storage after the first successful check.
 - Ensure that sensitive data is not exposed or stored insecurely.
 

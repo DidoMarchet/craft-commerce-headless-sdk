@@ -7,6 +7,7 @@ For a comprehensive understanding of the underlying functionalities, refer to th
 ---
 
 ### Key Features
+
 - Start a new subscription.
 - Cancel an active subscription.
 - Switch plans for an active subscription.
@@ -15,6 +16,7 @@ For a comprehensive understanding of the underlying functionalities, refer to th
 ---
 
 ### Table of Contents
+
 - [Installation](#installation)
 - [Methods](#methods)
   - [subscribe](#subscribe)
@@ -47,6 +49,7 @@ const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 Starts a new subscription.
 
 ##### Example
+
 ```typescript
 const response = await sdk.subscriptions.subscribe({
   planUid: 'hashed-plan-uid',
@@ -61,6 +64,7 @@ console.log('Subscription started:', response);
 ```
 
 ##### Parameters
+
 - **`planUid`**: The UID of the subscription plan (required).
 - **`fields`**: Custom fields for the subscription (optional).
 - **`fieldsLocation`**: The parameter name for custom fields (optional, defaults to `fields`).
@@ -73,6 +77,7 @@ console.log('Subscription started:', response);
 Cancels an active subscription.
 
 ##### Example
+
 ```typescript
 const response = await sdk.subscriptions.cancel({
   subscriptionUid: 'hashed-subscription-uid',
@@ -82,6 +87,7 @@ console.log('Subscription canceled:', response);
 ```
 
 ##### Parameters
+
 - **`subscriptionUid`**: The UID of the subscription to cancel (required).
 - **`[key: string]: any`**: Additional parameters specific to the gateway (optional).
 
@@ -92,6 +98,7 @@ console.log('Subscription canceled:', response);
 Switches the plan of an active subscription.
 
 ##### Example
+
 ```typescript
 const response = await sdk.subscriptions.switchPlan({
   subscriptionUid: 'hashed-subscription-uid',
@@ -102,6 +109,7 @@ console.log('Subscription plan switched:', response);
 ```
 
 ##### Parameters
+
 - **`subscriptionUid`**: The UID of the subscription to modify (required).
 - **`planUid`**: The UID of the new plan (required).
 - **`[key: string]: any`**: Additional parameters specific to the gateway (optional).
@@ -113,6 +121,7 @@ console.log('Subscription plan switched:', response);
 Reactivates a canceled subscription.
 
 ##### Example
+
 ```typescript
 const response = await sdk.subscriptions.reactivate({
   subscriptionUid: 'hashed-subscription-uid',
@@ -122,6 +131,7 @@ console.log('Subscription reactivated:', response);
 ```
 
 ##### Parameters
+
 - **`subscriptionUid`**: The UID of the subscription to reactivate (required).
 
 ---
@@ -211,6 +221,7 @@ console.log('Final UID:', finalUid);
 ```
 
 #### Important Notes
+
 - The `secretKey` corresponds to the Security Key configured in your Craft CMS installation.
 - **Always handle HMAC generation server-side** to prevent exposing sensitive keys in your client-side code.
 - The generated hash must be prefixed to the original UID for all subscription-related actions.

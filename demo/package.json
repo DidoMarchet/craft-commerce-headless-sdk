@@ -1,0 +1,18 @@
+{
+  "name": "craft-commerce-headless-sdk-demo",
+  "version": "1.0.0",
+  "description": "Demo for Craft Commerce Headless SDK",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-basic-ssl": "^1.2.0",
+    "localtunnel": "^2.0.2",
+    "@stripe/stripe-js": "^5.2.0"
+  },
+  "devDependencies": {
+    "vite": "^4.0.0"
+  }
+}

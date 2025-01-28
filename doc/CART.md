@@ -5,6 +5,7 @@ The `cart` module provides methods to interact with cart-related actions in Craf
 For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
 
 ### Key Features
+
 - Retrieve the current cart.
 - Add or update items in the cart.
 - Manage addresses associated with the cart.
@@ -44,14 +45,16 @@ const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 
 ### `completeCart`
 
-Completes the current cart and processes the order without a payment transaction. 
+Completes the current cart and processes the order without a payment transaction.
 
 #### Notes
+
 - If no `number` parameter is provided, the method acts on the active cart for the current session.
 - If a `number` parameter is provided, it attempts to complete the specified cart.
 - **Important:** If the "Allow Checkout Without Payment" setting is enabled for the store, customers can complete the cart without a payment. This allows submitting a `POST` request to the `commerce/cart/complete` controller action to finalize the order.
 
 #### Example
+
 ```typescript
 const response = await sdk.cart.completeCart({
   forceSave: true,
@@ -60,6 +63,7 @@ const response = await sdk.cart.completeCart({
 ```
 
 #### Parameters
+
 - **`forceSave`**: Whether to force-save the cart before completing (optional).
 - **`number`**: The cart number to complete (optional).
 - **`registerUserOnOrderComplete`**: Whether to register the user when the order is completed (optional).
@@ -71,10 +75,12 @@ const response = await sdk.cart.completeCart({
 Retrieves the current cart.
 
 #### Notes
+
 - If no `number` parameter is provided, the method retrieves the active cart for the current session.
 - If a `number` parameter is provided, it retrieves the specified cart.
 
 #### Example
+
 ```typescript
 const response = await sdk.cart.getCart({
   number: 'abc123',
@@ -82,6 +88,7 @@ const response = await sdk.cart.getCart({
 ```
 
 #### Parameters
+
 - **`number`**: The cart number to retrieve (optional).
 - **`forceSave`**: Whether to force-save the cart before retrieval (optional).
 
@@ -92,6 +99,7 @@ const response = await sdk.cart.getCart({
 Loads a cart by order number.
 
 #### Example
+
 ```typescript
 const response = await sdk.cart.loadCart({
   number: 'abc123',
@@ -99,6 +107,7 @@ const response = await sdk.cart.loadCart({
 ```
 
 #### Parameters
+
 - **`number`**: The cart number to load (optional).
 
 ---
@@ -108,11 +117,13 @@ const response = await sdk.cart.loadCart({
 Forgets the current cart.
 
 #### Example
+
 ```typescript
 const response = await sdk.cart.forgetCart();
 ```
 
 #### Parameters
+
 None.
 
 ---
@@ -122,13 +133,16 @@ None.
 Updates the current cart.
 
 #### Notes
+
 - This method supports a variety of parameters as described in the [Craft CMS documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html#post-cart-update-cart).
 - To add items to the cart, refer to the [Adding Items to Cart guide](https://craftcms.com/docs/commerce/5.x/development/cart.html#adding-items).
 - To update a line items to the cart, refer to the [Updating Line items to Cart guide](https://craftcms.com/docs/commerce/5.x/development/cart.html#line-items).
 - To add an address to the cart, refer to the [Updating Cart Address guide](https://craftcms.com/docs/commerce/5.x/system/addresses.html#cart-addresses).
 
 #### Examples
+
 **Adding Items to Cart:**
+
 ```typescript
 const response = await sdk.cart.updateCart({
   purchasables: [
@@ -139,6 +153,7 @@ const response = await sdk.cart.updateCart({
 ```
 
 **Adding Address to Cart:**
+
 ```typescript
 const response = await sdk.cart.updateCart({
   shippingAddress: {
@@ -154,6 +169,7 @@ const response = await sdk.cart.updateCart({
 ```
 
 #### Parameters
+
 - **`billingAddress`**: The billing address object (optional).
 - **`billingAddressId`**: The ID of the billing address (optional).
 - **`billingAddressSameAsShipping`**: Whether the billing address is the same as the shipping address (optional).
@@ -189,7 +205,9 @@ const response = await sdk.cart.updateCart({
 ```typescript
 import { craftCommerceHeadlessSdk } from './sdk/';
 
-const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://craft-commerce-headless.ddev.site/' });
+const sdk = craftCommerceHeadlessSdk({
+  apiBaseUrl: 'https://craft-commerce-headless.ddev.site/',
+});
 
 async function main() {
   try {
@@ -199,9 +217,7 @@ async function main() {
 
     // Update the cart with new items
     const updateResponse = await sdk.cart.updateCart({
-      purchasables: [
-        { id: 123, qty: 2 },
-      ],
+      purchasables: [{ id: 123, qty: 2 }],
     });
     console.log('Cart updated:', updateResponse);
 
@@ -217,7 +233,6 @@ async function main() {
       number: 'abc123',
     });
     console.log('Specific cart:', specificCartResponse);
-
   } catch (error) {
     console.error('An error occurred:', error);
   }

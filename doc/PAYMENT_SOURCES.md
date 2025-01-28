@@ -5,6 +5,7 @@ The `paymentSources` module provides methods to interact with payment source-rel
 For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
 
 ### Key Features
+
 - Add a new payment source.
 - Set a primary payment source.
 - Delete an existing payment source.
@@ -43,10 +44,12 @@ const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 Adds a new payment source.
 
 #### Notes
+
 - The structure of `paymentForm` depends on the gateway configured in Craft CMS.
 - Ensure that the gateway supports the payment method being added.
 
 #### Example
+
 ```typescript
 const response = await sdk.paymentSources.addPaymentSource({
   description: 'My Personal Visa Card',
@@ -62,6 +65,7 @@ const response = await sdk.paymentSources.addPaymentSource({
 ```
 
 #### Parameters
+
 - **`description`**: A description for the payment source (optional).
 - **`gatewayId`**: The gateway ID for the payment source (required).
 - **`isPrimaryPaymentSource`**: Whether this payment source should be set as primary (optional).
@@ -75,6 +79,7 @@ const response = await sdk.paymentSources.addPaymentSource({
 Sets an existing payment source as primary.
 
 #### Example
+
 ```typescript
 const response = await sdk.paymentSources.setPrimaryPaymentSource({
   id: 123,
@@ -82,6 +87,7 @@ const response = await sdk.paymentSources.setPrimaryPaymentSource({
 ```
 
 #### Parameters
+
 - **`id`**: The ID of the payment source to set as primary (required).
 
 ---
@@ -91,6 +97,7 @@ const response = await sdk.paymentSources.setPrimaryPaymentSource({
 Deletes an existing payment source.
 
 #### Example
+
 ```typescript
 const response = await sdk.paymentSources.deletePaymentSource({
   id: 123,
@@ -98,6 +105,7 @@ const response = await sdk.paymentSources.deletePaymentSource({
 ```
 
 #### Parameters
+
 - **`id`**: The ID of the payment source to delete (required).
 
 ---
@@ -107,7 +115,9 @@ const response = await sdk.paymentSources.deletePaymentSource({
 ```typescript
 import { craftCommerceHeadlessSdk } from './sdk/';
 
-const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://craft-commerce-headless.ddev.site/' });
+const sdk = craftCommerceHeadlessSdk({
+  apiBaseUrl: 'https://craft-commerce-headless.ddev.site/',
+});
 
 async function main() {
   try {
@@ -126,9 +136,11 @@ async function main() {
     console.log('Payment Source Added:', addResponse);
 
     // Set an existing payment source as primary
-    const setPrimaryResponse = await sdk.paymentSources.setPrimaryPaymentSource({
-      id: addResponse.id, // Use the ID returned from adding the payment source
-    });
+    const setPrimaryResponse = await sdk.paymentSources.setPrimaryPaymentSource(
+      {
+        id: addResponse.id, // Use the ID returned from adding the payment source
+      }
+    );
     console.log('Primary Payment Source Set:', setPrimaryResponse);
 
     // Delete a payment source

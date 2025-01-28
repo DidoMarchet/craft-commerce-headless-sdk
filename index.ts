@@ -13,6 +13,7 @@ import { subscriptions } from './api/subscriptions'; // Import subscription func
  * @param apiBaseUrl - The base URL of the Craft CMS API.
  * @returns An object exposing the initialized client and associated functionalities.
  */
+
 export const craftCommerceHeadlessSdk = ({
   apiBaseUrl,
 }: {

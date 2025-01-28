@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .section {
+        transition: opacity 0.3s ease, pointer-events 0.3s ease;
+      }
+      .section .content {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .section.active .content {
+        display: block;
+        opacity: 1;
+      }
+      .section.inactive h2 {
+        opacity: 0.5;
+      }
+      #toast-container .toast {
+        max-width: 500px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 py-10">
+    <!-- Toast Container -->
+    <div
+      id="toast-container"
+      class="fixed bottom-4 right-4 space-y-4 z-50"
+    ></div>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Checkout Form -->
+      <div class="lg:col-span-2 bg-white shadow-lg rounded-lg p-8">
+        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">
+          Checkout
+        </h1>
+
+        <div class="mb-8">
+          <p class="text-sm text-gray-600 mb-4">
+            Welcome to the demo checkout page. Please follow the steps below to
+            complete your purchase.
+          </p>
+        </div>
+
+        <!-- Configuration Section -->
+        <div id="config-section" class="section active">
+          <h2 class="text-xl font-semibold mb-4 text-gray-700">
+            Configuration
+          </h2>
+
+          <div class="content space-y-4">
+            <p class="text-sm text-gray-500 mb-4">
+              This step is necessary to connect the checkout to your Commerce
+              platform. Ensure you have enabled Craft Commerce to operate in
+              headless mode as described in the
+              <a
+                href="/doc/CONFIGURATION.md"
+                class="text-blue-600 underline hover:text-blue-800"
+                >documentation</a
+              >.
+            </p>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >API Base URL</label
+              >
+              <input
+                type="text"
+                id="apiBaseUrl"
+                placeholder="Enter API Base URL"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >GraphQL Endpoint</label
+              >
+              <input
+                type="text"
+                id="graphqlEndpoint"
+                placeholder="Enter GraphQL Endpoint"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Stripe Gateway ID</label
+              >
+              <input
+                type="text"
+                id="stripeGatewayId"
+                placeholder="Enter Stripe Gateway ID"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Stripe Publishable Key</label
+              >
+              <input
+                type="text"
+                id="stripePublishableKey"
+                placeholder="Enter Stripe Key"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <button
+              id="set-config"
+              class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 w-full font-semibold"
+            >
+              Save Configuration
+            </button>
+          </div>
+        </div>
+
+        <!-- Login Section -->
+        <div id="login-section" class="section inactive mt-8">
+          <h2 class="text-xl font-semibold mb-4 text-gray-700">Login</h2>
+
+          <div class="content space-y-4">
+            <p class="text-sm text-gray-500 mb-4">
+              For this demo, login details are not stored in a session, but they
+              can be saved in cookies for better session management.
+            </p>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Email</label
+              >
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder="Enter your email"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Password</label
+              >
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="Enter your password"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <button
+              id="login-button"
+              class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 w-full font-semibold"
+            >
+              Login
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Section -->
+        <div id="product-section" class="section inactive mt-6">
+          <h2 class="text-lg font-semibold mb-4">Select Products</h2>
+
+          <div class="content">
+            <p class="text-sm text-gray-500 mb-4">
+              Please configure at least one purchasable product in your system
+              to proceed with the checkout process.
+            </p>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+              id="product-list"
+            >
+              <!-- Products will be dynamically inserted here -->
+            </div>
+            <button
+              id="add-to-cart-button"
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 mt-4"
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+
+        <!-- Address Section -->
+        <div id="address-section" class="section inactive mt-8">
+          <h2 class="text-xl font-semibold mb-4 text-gray-700">
+            Enter Address
+          </h2>
+
+          <div class="content space-y-4">
+            <p class="text-sm text-gray-500 mb-4">
+              Each address entered here creates a new entry for the user.
+              Ideally, a REST endpoint should be implemented to fetch saved
+              addresses.
+            </p>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Full Name</label
+              >
+              <input
+                type="text"
+                id="fullName"
+                placeholder="Enter your full name"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Address Line 1</label
+              >
+              <input
+                type="text"
+                id="addressLine1"
+                placeholder="Enter address line 1"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Postal Code</label
+              >
+              <input
+                type="text"
+                id="postalCode"
+                placeholder="Enter postal code"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >City</label
+              >
+              <input
+                type="text"
+                id="locality"
+                placeholder="Enter your city"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Province</label
+              >
+              <input
+                type="text"
+                id="administrativeArea"
+                placeholder="Enter your province"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1 text-gray-700"
+                >Country</label
+              >
+              <select
+                id="countryCode"
+                class="w-full border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-lg px-4 py-2"
+              >
+                <option value="">Select Country</option>
+                <option value="IT">Italy</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="FR">France</option>
+                <option value="DE">Germany</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1"
+                >Label (Title):</label
+              >
+              <input
+                type="text"
+                id="title"
+                placeholder="Label for Address"
+                class="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <button
+              id="save-address-button"
+              class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 w-full font-semibold"
+            >
+              Save Address
+            </button>
+          </div>
+        </div>
+
+        <!-- Shipping Section -->
+        <div id="shipping-methods-section" class="section inactive mt-8">
+          <h2 class="text-xl font-semibold mb-4 text-gray-700">
+            Shipping Methods
+          </h2>
+          <div class="content space-y-4">
+            <div id="shipping-methods-list" class="space-y-2">
+              <!-- Shipping methods will be dynamically inserted here -->
+            </div>
+            <button
+              id="select-shipping-method-button"
+              class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 w-full font-semibold"
+            >
+              Continue to Payment
+            </button>
+          </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div id="payment-section" class="section inactive mt-8">
+          <h2 class="text-xl font-semibold mb-4 text-gray-700">Payment</h2>
+
+          <div class="content space-y-4">
+            <p class="text-sm text-gray-500 mb-4">
+              This demo uses Stripe to process payments, including 3D Secure. A
+              REST endpoint for fetching active gateways dynamically would be
+              ideal.
+            </p>
+            <div
+              id="stripe-elements"
+              class="p-4 border border-gray-300 rounded-lg shadow-sm"
+            ></div>
+            <button
+              id="pay-button"
+              class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 w-full font-semibold"
+            >
+              Pay Now
+            </button>
+          </div>
+        </div>
+
+        <!-- Complete Section -->
+        <div id="complete-section" class="section inactive mt-8">
+          <h2 class="text-xl font-semibold mb-4 text-gray-700">
+            Order Complete
+          </h2>
+          <div class="content space-y-4">
+            <p class="text-sm text-gray-500 mb-4">
+              Thank you for your purchase! Your order has been successfully
+              processed.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cart Summary -->
+      <div class="bg-gray-50 shadow-lg rounded-lg p-8 sticky top-10 self-start">
+        <h2 class="text-xl font-semibold mb-4 text-gray-700">Cart Summary</h2>
+        <div id="cart-summary">
+          <p class="text-sm text-gray-500">Your cart is empty.</p>
+        </div>
+        <div class="mt-4 space-y-2">
+          <div id="cart-shipping" class="text-sm text-gray-600"></div>
+          <div id="cart-taxes" class="text-sm text-gray-600"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/index.js"></script>
+  </body>
+</html>

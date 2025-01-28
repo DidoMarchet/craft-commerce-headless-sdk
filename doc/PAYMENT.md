@@ -5,6 +5,7 @@ The `payment` module provides methods to interact with payment-related actions i
 For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
 
 ### Key Features
+
 - Process payments for orders.
 - Complete off-site payments.
 - Support for 3D Secure payment flows.
@@ -42,16 +43,18 @@ const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 Processes a payment for an order. This method is used for initiating payments, including those requiring 3D Secure verification.
 
 #### Notes
+
 - Ensure the `gatewayId` corresponds to a configured and enabled gateway in Craft CMS Commerce.
 - Use `paymentSourceId` to reference a saved payment source.
 
 #### Example
+
 ```typescript
 const response = await sdk.payment.pay({
   orderEmail: 'user@example.com',
   gatewayId: 3,
   number: 'abc123',
-  paymentAmount: 100.00,
+  paymentAmount: 100.0,
   paymentCurrency: 'EUR',
   paymentSourceId: 5,
   registerUserOnOrderComplete: true,
@@ -63,6 +66,7 @@ const response = await sdk.payment.pay({
 ```
 
 #### Parameters
+
 - **`orderEmail`**: The email address associated with the order (optional).
 - **`gatewayId`**: The payment gateway ID (required).
 - **`number`**: The cart/order number (optional, defaults to the current cart).
@@ -83,6 +87,7 @@ const response = await sdk.payment.pay({
 Processes the return of a customer from an off-site payment. This method finalizes the payment in Craft CMS Commerce.
 
 #### Example
+
 ```typescript
 const response = await sdk.payment.completePayment({
   commerceTransactionHash: '123abc456def',
@@ -90,6 +95,7 @@ const response = await sdk.payment.completePayment({
 ```
 
 #### Parameters
+
 - **`commerceTransactionHash`**: The hash required to verify the payment (required).
 
 ---
@@ -156,7 +162,7 @@ handlePayment();
 const response = await sdk.payment.pay({
   orderEmail: 'user@example.com',
   gatewayId: 1, // Example gateway ID without 3D Secure
-  paymentAmount: 50.00,
+  paymentAmount: 50.0,
   paymentCurrency: 'EUR',
 });
 

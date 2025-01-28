@@ -3,6 +3,7 @@
 The `client` module allows you to make `GET` and `POST` requests to custom endpoints in Craft CMS Commerce. It automatically handles sessions with cookies and provides flexibility in configuring headers and handling responses.
 
 ### Key Features
+
 - Automatic CSRF token and session management.
 - Flexible configuration for request headers.
 - Simplified handling of different response types.
@@ -40,20 +41,26 @@ const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 Make a `POST` request to a custom API endpoint.
 
 #### Example
+
 ```typescript
-const response = await sdk.client.post('custom/endpoint', {
-  key: 'value',
-}, {
-  contentType: 'application/json', // Default
-  accept: 'application/json', // Default
-  headers: {
-    Authorization: 'Bearer your-token',
-    'Custom-Header': 'HeaderValue',
+const response = await sdk.client.post(
+  'custom/endpoint',
+  {
+    key: 'value',
   },
-});
+  {
+    contentType: 'application/json', // Default
+    accept: 'application/json', // Default
+    headers: {
+      Authorization: 'Bearer your-token',
+      'Custom-Header': 'HeaderValue',
+    },
+  }
+);
 ```
 
 #### Parameters
+
 - **`endpoint`**: The API endpoint relative to the base URL.
 - **`payload`**: The request body (optional).
 - **`options`**:
@@ -68,19 +75,25 @@ const response = await sdk.client.post('custom/endpoint', {
 Make a `GET` request to a custom API endpoint.
 
 #### Example
+
 ```typescript
-const response = await sdk.client.get('custom/endpoint', {
-  param: 'value',
-}, {
-  accept: 'application/json', // Default
-  headers: {
-    Authorization: 'Bearer your-token',
-    'Custom-Header': 'HeaderValue',
+const response = await sdk.client.get(
+  'custom/endpoint',
+  {
+    param: 'value',
   },
-});
+  {
+    accept: 'application/json', // Default
+    headers: {
+      Authorization: 'Bearer your-token',
+      'Custom-Header': 'HeaderValue',
+    },
+  }
+);
 ```
 
 #### Parameters
+
 - **`endpoint`**: The API endpoint relative to the base URL.
 - **`params`**: Query parameters (optional).
 - **`options`**:
@@ -98,15 +111,19 @@ const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 
 async function fetchData() {
   try {
-    const response = await sdk.client.get('custom/endpoint', {
-      param: 'value',
-    }, {
-      accept: 'application/json',
-      headers: {
-        Authorization: 'Bearer your-token',
-        'Custom-Header': 'HeaderValue',
+    const response = await sdk.client.get(
+      'custom/endpoint',
+      {
+        param: 'value',
       },
-    });
+      {
+        accept: 'application/json',
+        headers: {
+          Authorization: 'Bearer your-token',
+          'Custom-Header': 'HeaderValue',
+        },
+      }
+    );
     console.log('Data:', response);
   } catch (error) {
     console.error('Failed to fetch data:', error);
@@ -115,15 +132,19 @@ async function fetchData() {
 
 async function sendData() {
   try {
-    const response = await sdk.client.post('custom/endpoint', {
-      key: 'value',
-    }, {
-      accept: 'application/json',
-      headers: {
-        Authorization: 'Bearer your-token',
-        'Custom-Header': 'HeaderValue',
+    const response = await sdk.client.post(
+      'custom/endpoint',
+      {
+        key: 'value',
       },
-    });
+      {
+        accept: 'application/json',
+        headers: {
+          Authorization: 'Bearer your-token',
+          'Custom-Header': 'HeaderValue',
+        },
+      }
+    );
     console.log('Response:', response);
   } catch (error) {
     console.error('Failed to send data:', error);
