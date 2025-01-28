@@ -10,13 +10,14 @@ This SDK is designed to simplify integration with **Craft CMS Commerce**, offeri
 
 1. [Demo and Local Testing](#demo-and-local-testing)
 2. [Craft CMS Configuration Guide](#craft-cms-configuration-guide)
-3. [Client Module](#client-module)
-4. [Users Module](#users-module)
-5. [Cart Module](#cart-module)
-6. [Payment Sources Module](#payment-sources-module)
-7. [Payment Module](#payment-module)
-8. [Subscriptions Module](#subscriptions-module)
-9. [Suggestions for Craft CMS Improvements](#suggestions-for-craft-cms-improvements)
+3. [Package Installation](#package-installation)
+4. [Client Module](#client-module)
+5. [Users Module](#users-module)
+6. [Cart Module](#cart-module)
+7. [Payment Sources Module](#payment-sources-module)
+8. [Payment Module](#payment-module)
+9. [Subscriptions Module](#subscriptions-module)
+10. [Suggestions for Craft CMS Improvements](#suggestions-for-craft-cms-improvements)
 
 ---
 
@@ -43,7 +44,32 @@ This section provides details on configuring Craft CMS for headless usage, inclu
 
 - [Configuration](./doc/CONFIGURATION.md)
 
-Once Craft CMS Commerce is ready, you can use the modules below to handle specific e-commerce actions, each designed to interact seamlessly with Craft CMS Commerce features.
+---
+
+## Package Installation
+
+To use the Craft Commerce Headless SDK in your project, you can install it using your preferred package manager. Here are the commands for different managers:
+
+### npm
+```bash
+npm install craft-commerce-headless-sdk
+```
+
+### pnpm
+```bash
+pnpm add craft-commerce-headless-sdk
+```
+
+### yarn
+```bash
+yarn add craft-commerce-headless-sdk
+```
+
+After installation, you can import the SDK in your code:
+
+```javascript
+import { craftCommerceHeadlessSdk } from 'craft-commerce-headless-sdk';
+```
 
 ---
 
@@ -138,3 +164,4 @@ While this SDK provides extensive functionality, there are a few additional feat
 - **Include Available Payment Gateways in the Cart**: Similar to how shipping methods are returned, having payment gateways listed directly in the cart data would streamline the checkout process and improve integration ease.
 
 - **Return User-Associated Addresses**: Adding a feature to retrieve addresses associated with a user, similar to the `actions/users/session-info` method for session data, would simplify managing user information in headless implementations.
+
