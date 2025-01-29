@@ -47,10 +47,17 @@ return [
                 'https://example.com',
             ],
             'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+            'Access-Control-Allow-Headers' => [
+                'Authorization',
+                'Content-Type',
+                'X-CSRF-Token', #Important
+                'X-Requested-With' #Important
+            ],
             'Access-Control-Allow-Credentials' => true,
         ],
     ],
 ];
+
 ```
 
 ---

@@ -72,8 +72,15 @@ Create or update a user profile.
 
 ```typescript
 const response = await sdk.users.saveUser({
+  email: "user@example.com"
+  password: "securepassword"
+  username: "uniqueusername"
   firstName: 'John',
-  lastName: 'Doe',
+});
+
+// Update
+const response = await sdk.users.saveUser({
+  firstName: 'James',
   userId: 11,
 });
 ```
@@ -95,6 +102,10 @@ const response = await sdk.users.saveUser({
 - **`userId`**: The ID of the user to save, required when updating an existing user.
 - **`userVariable`**: The hashed name of the variable that should reference the user in case of validation error (defaults to user).
 - **`username`**: The user’s username. Only checked if the useEmailAsUsername config setting is false.
+
+#### Important Notes
+
+- Public user registration is disabled by default in Craft Pro. To allow users to register, go to **Settings → Users → Settings** and check **Allow public registration**.
 
 ---
 

@@ -155,16 +155,3 @@ async function handlePayment() {
 
 handlePayment();
 ```
-
-### Example: Payment without 3D Secure
-
-```typescript
-const response = await sdk.payment.pay({
-  orderEmail: 'user@example.com',
-  gatewayId: 1, // Example gateway ID without 3D Secure
-  paymentAmount: 50.0,
-  paymentCurrency: 'EUR',
-});
-
-console.log('Payment response:', response);
-```
