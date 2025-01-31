@@ -34,7 +34,7 @@ If you want to test the SDK locally, follow these steps:
    npm install
    npm run dev
    ```
-   This will start the demo locally.Bene Before using the SDK, ensure that Craft CMS and Craft Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
+   This will start the demo locally. Before using the SDK, ensure that Craft CMS and Craft Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
 
 ---
 
