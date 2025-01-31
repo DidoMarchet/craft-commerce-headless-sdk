@@ -1,8 +1,8 @@
 # Cart SDK Documentation
 
-The `cart` module provides methods to interact with cart-related actions in Craft CMS Commerce. It supports operations like retrieving, updating, completing carts, and more. All requests are handled securely using the `client` module.
+The `cart` module provides methods to interact with cart-related actions in Craft Commerce. It supports operations like retrieving, updating, completing carts, and more. All requests are handled securely using the `client` module.
 
-For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
+For a comprehensive understanding of the underlying functionalities, refer to the [Craft Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
 
 ### Key Features
 

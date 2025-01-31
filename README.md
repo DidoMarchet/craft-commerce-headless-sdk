@@ -1,6 +1,6 @@
 # Craft Commerce Headless SDK Documentation Index
 
-This SDK is designed to simplify integration with **Craft CMS Commerce**, offering specialized modules for users, carts, payments, subscriptions, and more. Whether you're building a headless e-commerce application or enhancing an existing Craft CMS Commerce setup, this guide will help you navigate and implement the SDK effectively.
+This SDK is designed to simplify integration with **Craft Commerce**, offering specialized modules for users, carts, payments, subscriptions, and more. Whether you're building a headless e-commerce application or enhancing an existing Craft Commerce setup, this guide will help you navigate and implement the SDK effectively.
 
 > **Note:** Craft Commerce version 4 or higher is required for compatibility with this SDK.
 
@@ -34,7 +34,7 @@ If you want to test the SDK locally, follow these steps:
    npm install
    npm run dev
    ```
-   This will start the demo locally.Bene Before using the SDK, ensure that Craft CMS and Craft CMS Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
+   This will start the demo locally.Bene Before using the SDK, ensure that Craft CMS and Craft Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
 
 ---
 
@@ -105,7 +105,7 @@ This module handles user account creation, profile management, and address handl
 
 ## Cart Module
 
-Manage shopping cart actions, including retrieval, updates, and checkout operations. This module supports typical e-commerce workflows in Craft CMS Commerce.
+Manage shopping cart actions, including retrieval, updates, and checkout operations. This module supports typical e-commerce workflows in Craft Commerce.
 
 - [Installation](./doc/CART.md#installation)
 - [Methods](./doc/CART.md#methods)
@@ -120,7 +120,7 @@ Manage shopping cart actions, including retrieval, updates, and checkout operati
 
 ## Payment Sources Module
 
-Create, manage, and assign payment methods to user accounts. This module supports common payment operations like adding or removing payment sources, tailored for Craft CMS Commerce.
+Create, manage, and assign payment methods to user accounts. This module supports common payment operations like adding or removing payment sources, tailored for Craft Commerce.
 
 - [Installation](./doc/PAYMENT_SOURCES.md#installation)
 - [Methods](./doc/PAYMENT_SOURCES.md#methods)
@@ -133,7 +133,7 @@ Create, manage, and assign payment methods to user accounts. This module support
 
 ## Payment Module
 
-Handle payments, including support for 3D Secure and other gateway integrations. This module streamlines the process of initiating and completing payments in Craft CMS Commerce.
+Handle payments, including support for 3D Secure and other gateway integrations. This module streamlines the process of initiating and completing payments in Craft Commerce.
 
 - [Installation](./doc/PAYMENT.md#installation)
 - [Methods](./doc/PAYMENT.md#methods)
@@ -145,7 +145,7 @@ Handle payments, including support for 3D Secure and other gateway integrations.
 
 ## Subscriptions Module
 
-Manage subscriptions, including plan creation, cancellations, switching, and reactivation. This module simplifies recurring payment setups in Craft CMS Commerce.
+Manage subscriptions, including plan creation, cancellations, switching, and reactivation. This module simplifies recurring payment setups in Craft Commerce.
 
 - [Installation](./doc/SUBSCRIPTIONS.md#installation)
 - [Methods](./doc/SUBSCRIPTIONS.md#methods)

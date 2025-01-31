@@ -1,8 +1,8 @@
 # Payment SDK Documentation
 
-The `payment` module provides methods to interact with payment-related actions in Craft CMS Commerce. It supports operations like processing payments and handling off-site payment completions.
+The `payment` module provides methods to interact with payment-related actions in Craft Commerce. It supports operations like processing payments and handling off-site payment completions.
 
-For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
+For a comprehensive understanding of the underlying functionalities, refer to the [Craft Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
 
 ### Key Features
 
@@ -44,7 +44,7 @@ Processes a payment for an order. This method is used for initiating payments, i
 
 #### Notes
 
-- Ensure the `gatewayId` corresponds to a configured and enabled gateway in Craft CMS Commerce.
+- Ensure the `gatewayId` corresponds to a configured and enabled gateway in Craft Commerce.
 - Use `paymentSourceId` to reference a saved payment source.
 
 #### Example
@@ -84,7 +84,7 @@ const response = await sdk.payment.pay({
 
 ### `completePayment`
 
-Processes the return of a customer from an off-site payment. This method finalizes the payment in Craft CMS Commerce.
+Processes the return of a customer from an off-site payment. This method finalizes the payment in Craft Commerce.
 
 #### Example
 

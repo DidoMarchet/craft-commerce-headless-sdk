@@ -1,6 +1,6 @@
 # Client SDK Documentation
 
-The `client` module allows you to make `GET` and `POST` requests to custom endpoints in Craft CMS Commerce. It automatically handles sessions with cookies and provides flexibility in configuring headers and handling responses.
+The `client` module allows you to make `GET` and `POST` requests to custom endpoints in Craft Commerce. It automatically handles sessions with cookies and provides flexibility in configuring headers and handling responses.
 
 ### Key Features
 

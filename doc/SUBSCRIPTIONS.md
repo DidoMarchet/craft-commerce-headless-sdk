@@ -1,8 +1,8 @@
 # Subscriptions SDK Documentation
 
-The `subscriptions` module provides methods to interact with subscription-related actions in Craft CMS Commerce. It supports operations like starting, canceling, switching, and reactivating subscriptions.
+The `subscriptions` module provides methods to interact with subscription-related actions in Craft Commerce. It supports operations like starting, canceling, switching, and reactivating subscriptions.
 
-For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
+For a comprehensive understanding of the underlying functionalities, refer to the [Craft Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
 
 ---
 

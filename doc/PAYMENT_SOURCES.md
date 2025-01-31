@@ -1,8 +1,8 @@
 # Payment Sources SDK Documentation
 
-The `paymentSources` module provides methods to interact with payment source-related actions in Craft CMS Commerce. It supports operations like adding, updating, setting as primary, and deleting payment sources. All requests are handled securely using the `Client` module.
+The `paymentSources` module provides methods to interact with payment source-related actions in Craft Commerce. It supports operations like adding, updating, setting as primary, and deleting payment sources. All requests are handled securely using the `Client` module.
 
-For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
+For a comprehensive understanding of the underlying functionalities, refer to the [Craft Commerce Controller Actions Documentation](https://craftcms.com/docs/commerce/5.x/reference/controller-actions.html).
 
 ### Key Features
 
@@ -161,5 +161,5 @@ main();
 ### Notes on Gateway Configuration
 
 - Ensure the gateway supports the payment methods you wish to use.
-- Check the Craft CMS Commerce settings to verify gateway configurations.
-- For additional details, refer to the [Craft CMS Commerce Gateway Documentation](https://craftcms.com/docs/commerce/5.x/payment-gateways.html).
+- Check the Craft Commerce settings to verify gateway configurations.
+- For additional details, refer to the [Craft Commerce Gateway Documentation](https://craftcms.com/docs/commerce/5.x/payment-gateways.html).

@@ -1,6 +1,6 @@
 # Users SDK Documentation
 
-The `users` module provides methods to interact with user-related actions in Craft CMS Commerce. It supports operations like logging in users, managing user profiles, handling addresses, and resetting passwords. All requests are handled securely using the `client` module.
+The `users` module provides methods to interact with user-related actions in Craft Commerce. It supports operations like logging in users, managing user profiles, handling addresses, and resetting passwords. All requests are handled securely using the `client` module.
 
 For a comprehensive understanding of the underlying functionalities, refer to the [Craft CMS Controller Actions Documentation](https://craftcms.com/docs/5.x/reference/controller-actions.html).
 
