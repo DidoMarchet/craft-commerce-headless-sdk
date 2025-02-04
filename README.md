@@ -34,7 +34,7 @@ If you want to test the SDK locally, follow these steps:
    npm install
    npm run dev
    ```
-   This will start the demo locally. Before using the SDK, ensure that Craft CMS and Craft Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](./doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
+   This will start the demo locally. Before using the SDK, ensure that Craft CMS and Craft Commerce are correctly configured for headless usage. Follow the [Craft CMS Configuration Guide](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CONFIGURATION.md) for essential setup steps, including CORS configuration and cookie settings.
 
 ---
 
@@ -42,7 +42,7 @@ If you want to test the SDK locally, follow these steps:
 
 This section provides details on configuring Craft CMS for headless usage, including CORS setup and other necessary settings.
 
-- [Configuration](./doc/CONFIGURATION.md)
+- [Configuration](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CONFIGURATION.md)
 
 ---
 
@@ -77,11 +77,11 @@ import { craftCommerceHeadlessSdk } from 'craft-commerce-headless-sdk';
 
 The base module for API communication, handling HTTP requests with `post` and `get` methods.
 
-- [Installation](./doc/CLIENT.md#installation)
-- [Methods](./doc/CLIENT.md#methods)
-  - [post](./doc/CLIENT.md#post)
-  - [get](./doc/CLIENT.md#get)
-- [Examples](./doc/CLIENT.md#examples)
+- [Installation](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CLIENT.md#installation)
+- [Methods](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CLIENT.md#methods)
+  - [post](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CLIENT.md#post)
+  - [get](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CLIENT.md#get)
+- [Examples](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CLIENT.md#examples)
 
 ---
 
@@ -89,17 +89,17 @@ The base module for API communication, handling HTTP requests with `post` and `g
 
 This module handles user account creation, profile management, and address handling. It simplifies operations like login, password resets, and managing user-related data, all essential for e-commerce platforms.
 
-- [Installation](./doc/USERS.md#installation)
-- [Methods](./doc/USERS.md#methods)
-  - [loginUser](./doc/USERS.md#loginuser)
-  - [saveUser](./doc/USERS.md#saveuser)
-  - [uploadUserPhoto](./doc/USERS.md#uploaduserphoto)
-  - [sendPasswordResetEmail](./doc/USERS.md#sendpasswordresetemail)
-  - [setPassword](./doc/USERS.md#setpassword)
-  - [saveAddress](./doc/USERS.md#saveaddress)
-  - [deleteAddress](./doc/USERS.md#deleteaddress)
-  - [getSessionInfo](./doc/USERS.md#getsessioninfo)
-- [Examples](./doc/USERS.md#examples)
+- [Installation](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#installation)
+- [Methods](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#methods)
+  - [loginUser](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#loginuser)
+  - [saveUser](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#saveuser)
+  - [uploadUserPhoto](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#uploaduserphoto)
+  - [sendPasswordResetEmail](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#sendpasswordresetemail)
+  - [setPassword](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#setpassword)
+  - [saveAddress](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#saveaddress)
+  - [deleteAddress](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#deleteaddress)
+  - [getSessionInfo](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#getsessioninfo)
+- [Examples](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/USERS.md#examples)
 
 ---
 
@@ -107,14 +107,14 @@ This module handles user account creation, profile management, and address handl
 
 Manage shopping cart actions, including retrieval, updates, and checkout operations. This module supports typical e-commerce workflows in Craft Commerce.
 
-- [Installation](./doc/CART.md#installation)
-- [Methods](./doc/CART.md#methods)
-  - [completeCart](./doc/CART.md#completecart)
-  - [getCart](./doc/CART.md#getcart)
-  - [loadCart](./doc/CART.md#loadcart)
-  - [forgetCart](./doc/CART.md#forgetcart)
-  - [updateCart](./doc/CART.md#updatecart)
-- [Examples](./doc/CART.md#examples)
+- [Installation](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CART.md#installation)
+- [Methods](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CART.md#methods)
+  - [completeCart](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CART.md#completecart)
+  - [getCart](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CART.md#getcart)
+  - [loadCart](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CART.md#loadcart)
+  - [forgetCart](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CART.md#forgetcart)
+  - [updateCart](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CART.md#updatecart)
+- [Examples](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/CART.md#examples)
 
 ---
 
@@ -122,12 +122,12 @@ Manage shopping cart actions, including retrieval, updates, and checkout operati
 
 Create, manage, and assign payment methods to user accounts. This module supports common payment operations like adding or removing payment sources, tailored for Craft Commerce.
 
-- [Installation](./doc/PAYMENT_SOURCES.md#installation)
-- [Methods](./doc/PAYMENT_SOURCES.md#methods)
-  - [addPaymentSource](./doc/PAYMENT_SOURCES.md#addpaymentsource)
-  - [setPrimaryPaymentSource](./doc/PAYMENT_SOURCES.md#setprimarypaymentsource)
-  - [deletePaymentSource](./doc/PAYMENT_SOURCES.md#deletepaymentsource)
-- [Examples](./doc/PAYMENT_SOURCES.md#examples)
+- [Installation](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT_SOURCES.md#installation)
+- [Methods](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT_SOURCES.md#methods)
+  - [addPaymentSource](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT_SOURCES.md#addpaymentsource)
+  - [setPrimaryPaymentSource](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT_SOURCES.md#setprimarypaymentsource)
+  - [deletePaymentSource](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT_SOURCES.md#deletepaymentsource)
+- [Examples](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT_SOURCES.md#examples)
 
 ---
 
@@ -135,11 +135,11 @@ Create, manage, and assign payment methods to user accounts. This module support
 
 Handle payments, including support for 3D Secure and other gateway integrations. This module streamlines the process of initiating and completing payments in Craft Commerce.
 
-- [Installation](./doc/PAYMENT.md#installation)
-- [Methods](./doc/PAYMENT.md#methods)
-  - [pay](./doc/PAYMENT.md#pay)
-  - [completePayment](./doc/PAYMENT.md#completepayment)
-- [Examples](./doc/PAYMENT.md#examples)
+- [Installation](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT.md#installation)
+- [Methods](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT.md#methods)
+  - [pay](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT.md#pay)
+  - [completePayment](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT.md#completepayment)
+- [Examples](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/PAYMENT.md#examples)
 
 ---
 
@@ -147,13 +147,13 @@ Handle payments, including support for 3D Secure and other gateway integrations.
 
 Manage subscriptions, including plan creation, cancellations, switching, and reactivation. This module simplifies recurring payment setups in Craft Commerce.
 
-- [Installation](./doc/SUBSCRIPTIONS.md#installation)
-- [Methods](./doc/SUBSCRIPTIONS.md#methods)
-  - [subscribe](./doc/SUBSCRIPTIONS.md#subscribe)
-  - [cancel](./doc/SUBSCRIPTIONS.md#cancel)
-  - [switchPlan](./doc/SUBSCRIPTIONS.md#switchplan)
-  - [reactivate](./doc/SUBSCRIPTIONS.md#reactivate)
-- [Examples](./doc/SUBSCRIPTIONS.md#examples)
+- [Installation](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/SUBSCRIPTIONS.md#installation)
+- [Methods](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/SUBSCRIPTIONS.md#methods)
+  - [subscribe](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/SUBSCRIPTIONS.md#subscribe)
+  - [cancel](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/SUBSCRIPTIONS.md#cancel)
+  - [switchPlan](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/SUBSCRIPTIONS.md#switchplan)
+  - [reactivate](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/SUBSCRIPTIONS.md#reactivate)
+- [Examples](https://github.com/DidoMarchet/craft-commerce-headless-sdk/blob/main/doc/SUBSCRIPTIONS.md#examples)
 
 ---
 

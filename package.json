@@ -27,5 +27,20 @@
     "typescript": "^5.0.0",
     "vite": "^4.0.0",
     "vite-plugin-dts": "^0.9.10"
-  }
+  },
+  "keywords": [
+    "craft",
+    "craft commerce",
+    "headless"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:DidoMarchet/craft-commerce-headless-sdk.git"
+  },
+  "author": "Davide Marchet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DidoMarchet/craft-commerce-headless-sdk/issues"
+  },
+  "homepage": "https://github.com/DidoMarchet/craft-commerce-headless-sdk#readme"
 }
