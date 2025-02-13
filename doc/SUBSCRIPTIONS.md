@@ -38,7 +38,7 @@ import { craftCommerceHeadlessSdk } from 'craft-commerce-headless-sdk';
 const sdk = craftCommerceHeadlessSdk({ apiBaseUrl: 'https://example.com/' });
 ```
 
-- **`apiBaseUrl`**: The base URL of your Craft CMS installation, ending with `/`.
+- **`apiBaseUrl`**: Base URL of your Craft CMS.
 
 ---
 
