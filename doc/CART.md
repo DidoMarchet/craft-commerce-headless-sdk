@@ -98,6 +98,7 @@ Retrieves the current cart.
 
 #### Notes
 
+- If no cart is found in memory, a new cart will be automatically created.
 - **Important:** Before using `getCart`, you must first call `loadCart` to initialize the cart in the current session. Otherwise, `getCart` will return the last cart saved in the browser cookies.
 
 #### Example
