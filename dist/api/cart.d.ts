@@ -47,7 +47,7 @@ export interface UpdateCartData {
  */
 export declare const cart: (craftClient: Client) => {
     completeCart: (cartData: CompleteCartData) => Promise<any>;
-    getCart: (cartData: GetCartData) => Promise<any>;
+    getCart: () => Promise<any>;
     loadCart: (cartData: LoadCartData) => Promise<any>;
     forgetCart: () => Promise<any>;
     updateCart: (cartData: UpdateCartData) => Promise<any>;

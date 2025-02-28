@@ -70,45 +70,51 @@ const response = await sdk.cart.completeCart({
 
 ---
 
-### `getCart`
-
-Retrieves the current cart.
-
-#### Notes
-
-- If no `number` parameter is provided, the method retrieves the active cart for the current session.
-- If a `number` parameter is provided, it retrieves the specified cart.
-
-#### Example
-
-```typescript
-const response = await sdk.cart.getCart({
-  number: 'abc123',
-});
-```
-
-#### Parameters
-
-- **`number`**: The cart number to retrieve (optional).
-- **`forceSave`**: Whether to force-save the cart before retrieval (optional).
-
----
-
 ### `loadCart`
 
 Loads a cart by order number.
+
+#### Notes
+
+- If the number parameter is not provided, a new cart will be initialized automatically.
 
 #### Example
 
 ```typescript
 const response = await sdk.cart.loadCart({
-  number: 'abc123',
+  number: 'a1b2c3d4e5f67890abcd1234ef567890',
 });
 ```
 
 #### Parameters
 
 - **`number`**: The cart number to load (optional).
+
+---
+
+### `getCart`
+
+Retrieves the current cart.
+
+#### Notes
+
+- **Important:** Before using `getCart`, you must first call `loadCart` to initialize the cart in the current session. Otherwise, `getCart` will return the last cart saved in the browser cookies.
+
+#### Example
+
+```typescript
+// Load the cart using its unique number
+let response = await sdk.cart.loadCart({
+  number: 'a1b2c3d4e5f67890abcd1234ef567890',
+});
+
+// Now you can safely retrieve the cart details
+response = await sdk.cart.getCart();
+```
+
+#### Parameters
+
+None.
 
 ---
 
@@ -230,7 +236,7 @@ async function main() {
 
     // Retrieve a specific cart by number
     const specificCartResponse = await sdk.cart.getCart({
-      number: 'abc123',
+      number: 'a1b2c3d4e5f67890abcd1234ef567890',
     });
     console.log('Specific cart:', specificCartResponse);
   } catch (error) {

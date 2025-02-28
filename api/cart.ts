@@ -62,11 +62,10 @@ export const cart = (craftClient: Client) => {
 
   /**
    * Gets the current cart (action: cart/get-cart).
-   * @param cartData - Data to get the cart.
    * @returns The server response.
    */
-  const getCart = async (cartData: GetCartData): Promise<any> => {
-    return await craftClient.get('actions/commerce/cart/get-cart', cartData);
+  const getCart = async (): Promise<any> => {
+    return await craftClient.get('actions/commerce/cart/get-cart');
   };
 
   /**

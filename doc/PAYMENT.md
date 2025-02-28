@@ -53,7 +53,7 @@ Processes a payment for an order. This method is used for initiating payments, i
 const response = await sdk.payment.pay({
   orderEmail: 'user@example.com',
   gatewayId: 3,
-  number: 'abc123',
+  number: 'a1b2c3d4e5f67890abcd1234ef567890',
   paymentAmount: 100.0,
   paymentCurrency: 'EUR',
   paymentSourceId: 5,

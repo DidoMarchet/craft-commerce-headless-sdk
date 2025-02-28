@@ -19,7 +19,7 @@ export declare const craftCommerceHeadlessSdk: ({ apiBaseUrl, }: {
     };
     cart: {
         completeCart: (cartData: import("./api/cart").CompleteCartData) => Promise<any>;
-        getCart: (cartData: import("./api/cart").GetCartData) => Promise<any>;
+        getCart: () => Promise<any>;
         loadCart: (cartData: import("./api/cart").LoadCartData) => Promise<any>;
         forgetCart: () => Promise<any>;
         updateCart: (cartData: import("./api/cart").UpdateCartData) => Promise<any>;

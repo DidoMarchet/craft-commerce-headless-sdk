@@ -89,7 +89,7 @@ const w = (t) => /^[a-zA-Z0-9.-]+$/.test(t), h = (t, n) => {
   getSessionInfo: async () => await t.get("actions/users/session-info")
 }), b = (t) => ({
   completeCart: async (s) => await t.post("actions/commerce/cart/complete", s),
-  getCart: async (s) => await t.get("actions/commerce/cart/get-cart", s),
+  getCart: async () => await t.get("actions/commerce/cart/get-cart"),
   loadCart: async (s) => await t.post("actions/commerce/cart/load-cart", s),
   forgetCart: async () => await t.post(
     "actions/commerce/cart/forget-cart",
