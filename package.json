@@ -1,11 +1,12 @@
 {
   "name": "craft-commerce-headless-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Craft Commerce Headless SDK provides tools to integrate Craft Commerce in headless environments, focusing on building API-driven checkout experiences.",
   "main": "./dist/craft-commerce-headless-sdk.umd.js",
   "module": "./dist/craft-commerce-headless-sdk.es.js",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/craft-commerce-headless-sdk.es.js",
       "require": "./dist/craft-commerce-headless-sdk.umd.js"
     }
