@@ -46,3 +46,9 @@ export const craftCommerceHeadlessSdk = ({
     subscriptions: subscriptionFunctions, // Expose the subscription functions
   };
 };
+
+export type * from './api/users';
+export type * from './api/cart';
+export type * from './api/payment-source';
+export type * from './api/payment';
+export type * from './api/subscriptions';
