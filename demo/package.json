@@ -10,7 +10,7 @@
   "dependencies": {
     "@stripe/stripe-js": "^5.5.0",
     "@vitejs/plugin-basic-ssl": "^1.2.0",
-    "craft-commerce-headless-sdk": "^1.0.0",
+    "craft-commerce-headless-sdk": "latest",
     "localtunnel": "^2.0.2"
   },
   "devDependencies": {

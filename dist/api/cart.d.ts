@@ -30,7 +30,7 @@ export interface UpdateCartData {
     paymentCurrency?: string;
     paymentSourceId?: number;
     purchasableId?: number;
-    purchasables?: Array<number>;
+    purchasables?: Array<number | object>;
     registerUserOnOrderComplete?: boolean;
     saveBillingAddressOnOrderComplete?: boolean;
     saveShippingAddressOnOrderComplete?: boolean;
