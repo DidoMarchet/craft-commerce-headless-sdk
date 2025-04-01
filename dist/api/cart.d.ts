@@ -12,11 +12,14 @@ export interface LoadCartData {
     number?: string;
 }
 export interface UpdateCartData {
-    billingAddress?: object;
+    billingAddress?: Record<string, any>;
     billingAddressId?: number;
     billingAddressSameAsShipping?: boolean;
-    clearNotices?: boolean;
+    clearAddresses?: boolean;
+    clearBillingAddress?: boolean;
     clearLineItems?: boolean;
+    clearNotices?: boolean;
+    clearShippingAddress?: boolean;
     couponCode?: string;
     email?: string;
     estimatedBillingAddress?: object;
@@ -25,17 +28,29 @@ export interface UpdateCartData {
     fields?: Record<string, any>;
     forceSave?: boolean;
     gatewayId?: number;
-    lineItems?: Array<object>;
+    lineItems?: Record<number, {
+        qty?: number;
+        options?: Record<string, any>;
+        note?: string;
+        remove?: boolean;
+    }>;
+    makePrimaryBillingAddress?: boolean;
+    makePrimaryShippingAddress?: boolean;
     number?: string;
     paymentCurrency?: string;
     paymentSourceId?: number;
     purchasableId?: number;
-    purchasables?: Array<number | object>;
+    purchasables?: Array<{
+        id: number;
+        qty?: number;
+        options?: Record<string, any>;
+        note?: string;
+    }>;
     registerUserOnOrderComplete?: boolean;
+    saveAddressesOnOrderComplete?: boolean;
     saveBillingAddressOnOrderComplete?: boolean;
     saveShippingAddressOnOrderComplete?: boolean;
-    saveAddressesOnOrderComplete?: boolean;
-    shippingAddress?: object;
+    shippingAddress?: Record<string, any>;
     shippingAddressId?: number;
     shippingAddressSameAsBilling?: boolean;
     shippingMethodHandle?: string;
