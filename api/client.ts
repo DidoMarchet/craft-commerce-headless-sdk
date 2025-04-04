@@ -3,18 +3,20 @@ import { getCookie } from '../utils/cookie';
 interface SessionInfo {
   csrfTokenValue: string;
 }
+
 interface FetchOptions {
-  accept?: string; // Specifies the type of content accepted
-  contentType?: string; // Specifies the type of content sent
-  [header: string]: string | undefined; // Additional custom headers
+  accept?: string;       // Specifies the accepted content type (e.g., 'application/json')
+  contentType?: string;  // Specifies the content type sent (e.g., 'application/json')
+  [header: string]: any; // Additional custom headers
 }
+
 export interface Client {
   /**
    * Makes a POST request with the CSRF token.
    * @param endpoint - The endpoint to send the request to.
    * @param payload - The payload to send.
-   * @param options - Options for the request.
-   * @returns The response from the server.
+   * @param options - Request options.
+   * @returns The server response.
    */
   post: (
     endpoint: string,
@@ -25,9 +27,9 @@ export interface Client {
   /**
    * Makes a GET request.
    * @param endpoint - The endpoint to send the request to.
-   * @param params - Query string parameters as a record of keys and values.
-   * @param options - Options for the request.
-   * @returns The response from the server.
+   * @param params - Query string parameters as a key/value record.
+   * @param options - Request options.
+   * @returns The server response.
    */
   get: (
     endpoint: string,
@@ -37,61 +39,91 @@ export interface Client {
 }
 
 /**
- * Client API for interacting with Craft CMS.
- * @param apiBaseUrl - The base URL of the API.
- * @returns An instance of the client.
+ * Custom API Error class to represent non-2xx responses.
  */
-export const client = ({ apiBaseUrl }: { apiBaseUrl: string }): Client => {
-  if (!apiBaseUrl.endsWith('/')) {
-    apiBaseUrl += '/'; // Ensure the base URL ends with a slash
+class ApiError extends Error {
+  status: number;
+  data: any;
+
+  constructor(message: string, status: number, data: any) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.data = data;
+
+    // Maintain proper prototype chain (important for older browsers)
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
+// Maximum number of retries for token refresh
+const MAX_RETRIES = 1;
+
+// Variable to store the CSRF token
+let csrfToken: string | null = null;
+
+// Replace with your actual API base URL
+let apiBaseUrl = 'YOUR_API_BASE_URL';
+if (!apiBaseUrl.endsWith('/')) {
+  apiBaseUrl += '/';
+}
+
+/**
+ * Fetches the CSRF token from the server if not available in cookies.
+ * @returns The CSRF token.
+ */
+const fetchCsrfToken = async (): Promise<string> => {
+  const cookieName = 'CRAFT_CSRF_TOKEN';
+  // Try to obtain the token from cookies
+  csrfToken = getCookie(cookieName, apiBaseUrl);
+  if (csrfToken) return csrfToken;
+
+  // Otherwise, fetch the token from the server
+  const response = await fetch(`${apiBaseUrl}actions/users/session-info`, {
+    headers: { Accept: 'application/json' },
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const errorMessage = errorData.message || `Failed to fetch CSRF token with status ${response.status}`;
+    throw new ApiError(errorMessage, response.status, errorData);
   }
 
-  const cookieName = 'CRAFT_CSRF_TOKEN';
-  let csrfToken: string | null = getCookie(cookieName, apiBaseUrl); // Try to get the CSRF token from cookies
+  const session: SessionInfo = await response.json();
+  csrfToken = session.csrfTokenValue;
+  return csrfToken;
+};
 
-  /**
-   * Fetches the CSRF token from the server if not available in cookies.
-   * @returns The CSRF token.
-   */
-  const fetchCsrfToken = async (): Promise<string> => {
-    const response = await fetch(`${apiBaseUrl}actions/users/session-info`, {
-      headers: { Accept: 'application/json' },
-      credentials: 'include', // Include cookies in the request
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error(errorData);
-      throw new Error('Failed to fetch CSRF token');
-    }
-
-    const session: SessionInfo = await response.json();
-    csrfToken = session.csrfTokenValue; // Save the CSRF token
-    return csrfToken;
-  };
+/**
+ * Client API for interacting with Craft CMS APIs.
+ * @param apiBaseUrlParam - The base URL of the API.
+ * @returns An instance of the client.
+ */
+export const client = ({ apiBaseUrl: baseUrl }: { apiBaseUrl: string }): Client => {
+  // Ensure base URL ends with a slash
+  apiBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 
   /**
    * Makes a POST request with the CSRF token.
    * @param endpoint - The endpoint to send the request to.
    * @param payload - The payload to send.
-   * @param options - Options for the request, such as headers.
-   * @returns The response from the server.
+   * @param options - Request options such as headers.
+   * @param retryCount - Internal counter for retry attempts.
+   * @returns The server response.
    */
   const post = async (
     endpoint: string,
     payload?: any,
-    options: FetchOptions = {}
+    options: FetchOptions = {},
+    retryCount: number = 0
   ): Promise<any> => {
     try {
       if (!csrfToken) {
         csrfToken = await fetchCsrfToken();
       }
 
-      const {
-        accept = 'application/json',
-        contentType = 'application/json',
-        ...headers
-      } = options;
+      const { accept = 'application/json', contentType = 'application/json', ...headers } = options;
       const body = payload !== undefined ? JSON.stringify(payload) : undefined;
 
       const response = await fetch(`${apiBaseUrl}${endpoint}`, {
@@ -109,38 +141,40 @@ export const client = ({ apiBaseUrl }: { apiBaseUrl: string }): Client => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        console.error(errorData.message || 'API request failed');
+        console.error(`API POST error (${endpoint}):`, errorData.message || 'API request failed');
 
         // Handle CSRF token expiration or invalidity
         if (
+          retryCount < MAX_RETRIES &&
           response.status === 400 &&
           errorData.message === 'Unable to verify your data submission.'
         ) {
-          console.warn('CSRF token expired or invalid. Refreshing token...');
+          console.warn('CSRF token expired or invalid. Retrying...');
           csrfToken = null; // Reset the CSRF token
-          return await post(endpoint, payload); // Retry the request after refreshing the token
+          return await post(endpoint, payload, options, retryCount + 1);
         }
 
-        return errorData;
+        const errorMessage = errorData.message || `API request failed with status ${response.status}`;
+        throw new ApiError(errorMessage, response.status, errorData);
       }
 
       if (accept === 'application/pdf') {
-        return await response.blob(); // Return the file as Blob
+        return await response.blob();
       }
 
       return await response.json();
     } catch (error) {
-      console.error('Error making POST request:', error);
+      console.error(error);
       throw error;
     }
   };
 
   /**
-   * Makes a GET request (CSRF token is not required for GET requests).
+   * Makes a GET request.
    * @param endpoint - The endpoint to send the request to.
-   * @param params - Query string parameters as a record of keys and values.
-   * @param options - Options for the request, such as headers.
-   * @returns The response from the server.
+   * @param params - Query string parameters as a key/value record.
+   * @param options - Request options such as headers.
+   * @returns The server response.
    */
   const get = async (
     endpoint: string,
@@ -153,7 +187,7 @@ export const client = ({ apiBaseUrl }: { apiBaseUrl: string }): Client => {
 
       Object.keys(params).forEach((key) => {
         if (params[key] !== undefined && params[key] !== null) {
-          url.searchParams.append(key, String(params[key])); // Convert values to strings
+          url.searchParams.append(key, String(params[key]));
         }
       });
 
@@ -164,22 +198,21 @@ export const client = ({ apiBaseUrl }: { apiBaseUrl: string }): Client => {
           'X-Requested-With': 'XMLHttpRequest',
           ...headers,
         },
-        credentials: 'include', // Include cookies in the request
+        credentials: 'include',
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error(errorData.message || 'API request failed');
-        return errorData;
+        console.error(`API GET error (${endpoint}):`, await response.text());
+        throw await parseErrorResponse(response);
       }
 
       if (accept === 'application/pdf') {
-        return await response.blob(); // Return the file as Blob
+        return await response.blob();
       }
 
       return await response.json();
     } catch (error) {
-      console.error('Error making GET request:', error);
+      console.error(error);
       throw error;
     }
   };
@@ -188,4 +221,32 @@ export const client = ({ apiBaseUrl }: { apiBaseUrl: string }): Client => {
     post,
     get,
   };
+};
+
+/**
+ * Helper function to parse error responses.
+ * @param response - The Response object returned from fetch.
+ * @returns An Error object with the extracted message.
+ */
+const parseErrorResponse = async (response: Response): Promise<Error> => {
+  let errorMessage = 'API request failed';
+  try {
+    const errorData = await response.json();
+    if (errorData.error) {
+      errorMessage = errorData.error;
+    } else if (errorData.errors) {
+      if (typeof errorData.errors === 'object') {
+        errorMessage = Object.values(errorData.errors).flat().join(', ');
+      } else {
+        errorMessage = errorData.errors;
+      }
+    } else {
+      errorMessage = errorData.message || errorMessage;
+    }
+  } catch (jsonError) {
+    const text = await response.text();
+    errorMessage = text || response.statusText || errorMessage;
+  }
+  errorMessage = `(${response.status}) ${errorMessage}`;
+  return new Error(errorMessage);
 };

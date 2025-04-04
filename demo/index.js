@@ -1,5 +1,5 @@
 import { loadStripe } from '@stripe/stripe-js';
-import { craftCommerceHeadlessSdk } from 'craft-commerce-headless-sdk';
+import { craftCommerceHeadlessSdk } from '../dist/craft-commerce-headless-sdk.es.js';
 
 let sdk;
 let stripe;

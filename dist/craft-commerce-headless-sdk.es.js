@@ -1,96 +1,116 @@
-const w = (t) => /^[a-zA-Z0-9.-]+$/.test(t), h = (t, n) => {
-  var o;
-  if (!w(n))
+var P = Object.defineProperty;
+var f = (t, s, e) => s in t ? P(t, s, { enumerable: !0, configurable: !0, writable: !0, value: e }) : t[s] = e;
+var h = (t, s, e) => (f(t, typeof s != "symbol" ? s + "" : s, e), e);
+const S = (t) => /^[a-zA-Z0-9.-]+$/.test(t), b = (t, s) => {
+  var r;
+  if (!S(s))
     return null;
-  const a = `; ${document.cookie}`.split(`; ${t}=`);
-  return a.length === 2 && ((o = a.pop()) == null ? void 0 : o.split(";").shift()) || null;
-}, g = ({ apiBaseUrl: t }) => {
-  t.endsWith("/") || (t += "/");
-  let r = h("CRAFT_CSRF_TOKEN", t);
-  const a = async () => {
-    const s = await fetch(`${t}actions/users/session-info`, {
-      headers: { Accept: "application/json" },
-      credentials: "include"
-      // Include cookies in the request
-    });
-    if (!s.ok) {
-      const p = await s.json().catch(() => ({}));
-      throw console.error(p), new Error("Failed to fetch CSRF token");
-    }
-    return r = (await s.json()).csrfTokenValue, r;
-  }, o = async (s, u, p = {}) => {
+  const o = `; ${document.cookie}`.split(`; ${t}=`);
+  return o.length === 2 && ((r = o.pop()) == null ? void 0 : r.split(";").shift()) || null;
+};
+class w extends Error {
+  constructor(e, o, r) {
+    super(e);
+    h(this, "status");
+    h(this, "data");
+    this.name = "ApiError", this.status = o, this.data = r, Object.setPrototypeOf(this, w.prototype);
+  }
+}
+const v = 1;
+let i = null, d = "YOUR_API_BASE_URL";
+d.endsWith("/") || (d += "/");
+const A = async () => {
+  if (i = b("CRAFT_CSRF_TOKEN", d), i)
+    return i;
+  const s = await fetch(`${d}actions/users/session-info`, {
+    headers: { Accept: "application/json" },
+    credentials: "include"
+  });
+  if (!s.ok) {
+    const o = await s.json().catch(() => ({})), r = o.message || `Failed to fetch CSRF token with status ${s.status}`;
+    throw new w(r, s.status, o);
+  }
+  return i = (await s.json()).csrfTokenValue, i;
+}, R = ({ apiBaseUrl: t }) => {
+  d = t.endsWith("/") ? t : `${t}/`;
+  const s = async (o, r, c = {}, n = 0) => {
     try {
-      r || (r = await a());
-      const {
-        accept: e = "application/json",
-        contentType: y = "application/json",
-        ...d
-      } = p, m = u !== void 0 ? JSON.stringify(u) : void 0, c = await fetch(`${t}${s}`, {
+      i || (i = await A());
+      const { accept: u = "application/json", contentType: l = "application/json", ...a } = c, m = r !== void 0 ? JSON.stringify(r) : void 0, p = await fetch(`${d}${o}`, {
         method: "POST",
         headers: {
-          "Content-Type": y,
-          Accept: e,
-          "X-CSRF-Token": r,
+          "Content-Type": l,
+          Accept: u,
+          "X-CSRF-Token": i,
           "X-Requested-With": "XMLHttpRequest",
-          ...d
+          ...a
         },
         body: m,
         credentials: "include"
         // Include cookies in the request
       });
-      if (!c.ok) {
-        const l = await c.json().catch(() => ({}));
-        return console.error(l.message || "API request failed"), c.status === 400 && l.message === "Unable to verify your data submission." ? (console.warn("CSRF token expired or invalid. Refreshing token..."), r = null, await o(s, u)) : l;
+      if (!p.ok) {
+        const y = await p.json().catch(() => ({}));
+        if (console.error(`API POST error (${o}):`, y.message || "API request failed"), n < v && p.status === 400 && y.message === "Unable to verify your data submission.")
+          return console.warn("CSRF token expired or invalid. Retrying..."), i = null, await s(o, r, c, n + 1);
+        const g = y.message || `API request failed with status ${p.status}`;
+        throw new w(g, p.status, y);
       }
-      return e === "application/pdf" ? await c.blob() : await c.json();
-    } catch (e) {
-      throw console.error("Error making POST request:", e), e;
+      return u === "application/pdf" ? await p.blob() : await p.json();
+    } catch (u) {
+      throw console.error(u), u;
     }
   };
   return {
-    post: o,
-    get: async (s, u = {}, p = {}) => {
+    post: s,
+    get: async (o, r = {}, c = {}) => {
       try {
-        const { accept: e = "application/json", ...y } = p, d = new URL(s, t);
-        Object.keys(u).forEach((c) => {
-          u[c] !== void 0 && u[c] !== null && d.searchParams.append(c, String(u[c]));
+        const { accept: n = "application/json", ...u } = c, l = new URL(o, d);
+        Object.keys(r).forEach((m) => {
+          r[m] !== void 0 && r[m] !== null && l.searchParams.append(m, String(r[m]));
         });
-        const m = await fetch(d.toString(), {
+        const a = await fetch(l.toString(), {
           method: "GET",
           headers: {
-            Accept: e,
+            Accept: n,
             "X-Requested-With": "XMLHttpRequest",
-            ...y
+            ...u
           },
           credentials: "include"
-          // Include cookies in the request
         });
-        if (!m.ok) {
-          const c = await m.json().catch(() => ({}));
-          return console.error(c.message || "API request failed"), c;
-        }
-        return e === "application/pdf" ? await m.blob() : await m.json();
-      } catch (e) {
-        throw console.error("Error making GET request:", e), e;
+        if (!a.ok)
+          throw console.error(`API GET error (${o}):`, await a.text()), await j(a);
+        return n === "application/pdf" ? await a.blob() : await a.json();
+      } catch (n) {
+        throw console.error(n), n;
       }
     }
   };
-}, P = (t) => ({
-  loginUser: async (e) => await t.post("actions/users/login", e),
-  saveUser: async (e) => await t.post("actions/users/save-user", e),
-  uploadUserPhoto: async (e) => await t.post("actions/users/upload-user-photo", e),
-  sendPasswordResetEmail: async (e) => await t.post(
+}, j = async (t) => {
+  let s = "API request failed";
+  try {
+    const e = await t.json();
+    e.error ? s = e.error : e.errors ? typeof e.errors == "object" ? s = Object.values(e.errors).flat().join(", ") : s = e.errors : s = e.message || s;
+  } catch {
+    s = await t.text() || t.statusText || s;
+  }
+  return s = `(${t.status}) ${s}`, new Error(s);
+}, E = (t) => ({
+  loginUser: async (a) => await t.post("actions/users/login", a),
+  saveUser: async (a) => await t.post("actions/users/save-user", a),
+  uploadUserPhoto: async (a) => await t.post("actions/users/upload-user-photo", a),
+  sendPasswordResetEmail: async (a) => await t.post(
     "actions/users/send-password-reset-email",
-    e
+    a
   ),
-  setPassword: async (e) => await t.post("actions/users/set-password", e),
-  saveAddress: async (e) => await t.post("actions/users/save-address", e),
-  deleteAddress: async (e) => await t.post("actions/users/delete-address", e),
+  setPassword: async (a) => await t.post("actions/users/set-password", a),
+  saveAddress: async (a) => await t.post("actions/users/save-address", a),
+  deleteAddress: async (a) => await t.post("actions/users/delete-address", a),
   getSessionInfo: async () => await t.get("actions/users/session-info")
-}), b = (t) => ({
-  completeCart: async (s) => await t.post("actions/commerce/cart/complete", s),
+}), T = (t) => ({
+  completeCart: async (n) => await t.post("actions/commerce/cart/complete", n),
   getCart: async () => await t.get("actions/commerce/cart/get-cart"),
-  loadCart: async (s) => await t.post("actions/commerce/cart/load-cart", s),
+  loadCart: async (n) => await t.post("actions/commerce/cart/load-cart", n),
   forgetCart: async () => await t.post(
     "actions/commerce/cart/forget-cart",
     void 0,
@@ -98,65 +118,65 @@ const w = (t) => /^[a-zA-Z0-9.-]+$/.test(t), h = (t, n) => {
       accept: "text/html"
     }
   ),
-  updateCart: async (s) => await t.post(
+  updateCart: async (n) => await t.post(
     "actions/commerce/cart/update-cart",
-    s
+    n
   )
-}), S = (t) => ({
-  addPaymentSource: async (o) => await t.post(
+}), $ = (t) => ({
+  addPaymentSource: async (r) => await t.post(
     "actions/commerce/payment-sources/add",
-    o
+    r
   ),
-  setPrimaryPaymentSource: async (o) => await t.post(
+  setPrimaryPaymentSource: async (r) => await t.post(
     "actions/commerce/payment-sources/set-primary-payment-source",
-    o
+    r
   ),
-  deletePaymentSource: async (o) => await t.post(
+  deletePaymentSource: async (r) => await t.post(
     "actions/commerce/payment-sources/delete",
-    o
+    r
   )
-}), f = (t) => ({
-  completePayment: async (a) => await t.get(
+}), k = (t) => ({
+  completePayment: async (o) => await t.get(
     "actions/commerce/payments/complete-payment",
-    a
+    o
   ),
-  pay: async (a) => await t.post("actions/commerce/payments/pay", a)
-}), v = (t) => ({
-  subscribe: async (i) => await t.post(
+  pay: async (o) => await t.post("actions/commerce/payments/pay", o)
+}), F = (t) => ({
+  subscribe: async (c) => await t.post(
     "actions/commerce/subscriptions/subscribe",
-    i
+    c
   ),
-  cancel: async (i) => await t.post(
+  cancel: async (c) => await t.post(
     "actions/commerce/subscriptions/cancel",
-    i
+    c
   ),
-  switchPlan: async (i) => await t.post(
+  switchPlan: async (c) => await t.post(
     "actions/commerce/subscriptions/switch",
-    i
+    c
   ),
-  reactivate: async (i) => await t.post(
+  reactivate: async (c) => await t.post(
     "actions/commerce/subscriptions/reactivate",
-    i
+    c
   )
-}), k = ({
+}), x = ({
   apiBaseUrl: t
 }) => {
-  const n = g({ apiBaseUrl: t }), r = P(n), a = b(n), o = S(n), i = f(n), s = v(n);
+  const s = R({ apiBaseUrl: t }), e = E(s), o = T(s), r = $(s), c = k(s), n = F(s);
   return {
-    client: n,
+    client: s,
     // Expose the client (if needed)
-    users: r,
+    users: e,
     // Expose the user functions
-    cart: a,
+    cart: o,
     // Expose the cart functions
-    paymentSources: o,
+    paymentSources: r,
     // Expose the payment sources functions
-    payment: i,
+    payment: c,
     // Expose the payment functions
-    subscriptions: s
+    subscriptions: n
     // Expose the subscription functions
   };
 };
 export {
-  k as craftCommerceHeadlessSdk
+  x as craftCommerceHeadlessSdk
 };
