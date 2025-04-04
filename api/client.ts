@@ -1,36 +1,91 @@
+/*******************************************************
+ * apiClient.ts
+ *
+ * Description:
+ * A configurable client for interacting with Craft CMS APIs
+ * with enhanced error handling and optional logging.
+ *******************************************************/
+
 import { getCookie } from '../utils/cookie';
 
+/**
+ * Example of a stricter error data interface.
+ * Adjust it to match your actual API error structure.
+ */
+interface ApiErrorData {
+  message?: string;
+  error?: string;
+  errors?: Record<string, string[]>;
+  [key: string]: any; // Fallback for unexpected fields
+}
+
+/**
+ * A session info interface for the CSRF token response.
+ */
 interface SessionInfo {
   csrfTokenValue: string;
 }
 
-interface FetchOptions {
-  accept?: string;       // Specifies the accepted content type (e.g., 'application/json')
-  contentType?: string;  // Specifies the content type sent (e.g., 'application/json')
-  [header: string]: any; // Additional custom headers
+/**
+ * Options for controlling log behavior, specifying the accepted/sent content type, etc.
+ */
+export interface FetchOptions {
+  accept?: string;              // e.g., 'application/json'
+  contentType?: string;         // e.g., 'application/json'
+  [header: string]: any;        // Additional custom headers
 }
 
+/**
+ * Configuration for enabling or disabling logs and controlling retries.
+ */
+interface ClientConfig {
+  apiBaseUrl: string;           // Base URL of your Craft CMS API
+  enableLogging?: boolean;      // If true, logs to console
+  maxRetries?: number;          // Max number of times to retry on CSRF errors
+}
+
+/**
+ * Our custom API Error class for non-2xx responses.
+ * Now includes endpoint, method, and the number of retries performed.
+ */
+export class ApiError extends Error {
+  status: number;
+  data: ApiErrorData;
+  endpoint: string;
+  method: string;
+  retryCount: number;
+
+  constructor(
+    message: string,
+    status: number,
+    data: ApiErrorData,
+    endpoint: string,
+    method: string,
+    retryCount: number
+  ) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.data = data;
+    this.endpoint = endpoint;
+    this.method = method;
+    this.retryCount = retryCount;
+
+    // Maintain the correct prototype chain
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
+/**
+ * Our final client interface with post and get methods.
+ */
 export interface Client {
-  /**
-   * Makes a POST request with the CSRF token.
-   * @param endpoint - The endpoint to send the request to.
-   * @param payload - The payload to send.
-   * @param options - Request options.
-   * @returns The server response.
-   */
   post: (
     endpoint: string,
     payload?: any,
     options?: FetchOptions
   ) => Promise<any>;
 
-  /**
-   * Makes a GET request.
-   * @param endpoint - The endpoint to send the request to.
-   * @param params - Query string parameters as a key/value record.
-   * @param options - Request options.
-   * @returns The server response.
-   */
   get: (
     endpoint: string,
     params?: Record<string, any>,
@@ -38,79 +93,108 @@ export interface Client {
   ) => Promise<any>;
 }
 
+/*******************************************************
+ * Implementation details
+ *******************************************************/
+
 /**
- * Custom API Error class to represent non-2xx responses.
+ * If the code in the method wants to log, it checks the
+ * enableLogging flag. This helps avoid spamming logs.
  */
-class ApiError extends Error {
-  status: number;
-  data: any;
-
-  constructor(message: string, status: number, data: any) {
-    super(message);
-    this.name = 'ApiError';
-    this.status = status;
-    this.data = data;
-
-    // Maintain proper prototype chain (important for older browsers)
-    Object.setPrototypeOf(this, ApiError.prototype);
+function log(enableLogging: boolean | undefined, ...args: any[]): void {
+  if (enableLogging) {
+    console.log(...args);
   }
 }
 
-// Maximum number of retries for token refresh
-const MAX_RETRIES = 1;
-
-// Variable to store the CSRF token
+/**
+ * Global variables for storing the CSRF token and logging/retry configs.
+ */
 let csrfToken: string | null = null;
+let enableLogging = false;
+let maxRetries = 1;
+let baseUrl = 'YOUR_API_BASE_URL'; // Default fallback
 
-// Replace with your actual API base URL
-let apiBaseUrl = 'YOUR_API_BASE_URL';
-if (!apiBaseUrl.endsWith('/')) {
-  apiBaseUrl += '/';
+/**
+ * A small helper to ensure we have a slash at the end of the base URL.
+ */
+function normalizeBaseUrl(url: string): string {
+  return url.endsWith('/') ? url : url + '/';
 }
 
 /**
- * Fetches the CSRF token from the server if not available in cookies.
- * @returns The CSRF token.
+ * Attempt to fetch the CSRF token from either cookies or from the server.
  */
-const fetchCsrfToken = async (): Promise<string> => {
+async function fetchCsrfToken(): Promise<string> {
   const cookieName = 'CRAFT_CSRF_TOKEN';
-  // Try to obtain the token from cookies
-  csrfToken = getCookie(cookieName, apiBaseUrl);
-  if (csrfToken) return csrfToken;
 
-  // Otherwise, fetch the token from the server
-  const response = await fetch(`${apiBaseUrl}actions/users/session-info`, {
+  // Try to get the token from cookies first
+  if (!csrfToken) {
+    csrfToken = getCookie(cookieName, baseUrl);
+  }
+  if (csrfToken) {
+    return csrfToken;
+  }
+
+  // Otherwise, fetch it from the server
+  const response = await fetch(`${baseUrl}actions/users/session-info`, {
     headers: { Accept: 'application/json' },
     credentials: 'include',
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    const errorMessage = errorData.message || `Failed to fetch CSRF token with status ${response.status}`;
-    throw new ApiError(errorMessage, response.status, errorData);
+    const errorData: ApiErrorData = await response.json().catch(() => ({}));
+    const errorMessage =
+      errorData.message || `Failed to fetch CSRF token with status ${response.status}`;
+    throw new ApiError(errorMessage, response.status, errorData, 'actions/users/session-info', 'GET', 0);
   }
 
   const session: SessionInfo = await response.json();
   csrfToken = session.csrfTokenValue;
   return csrfToken;
-};
+}
 
 /**
- * Client API for interacting with Craft CMS APIs.
- * @param apiBaseUrlParam - The base URL of the API.
- * @returns An instance of the client.
+ * Helper to parse non-OK responses in GET requests.
+ * Returns an Error object (usually a built-in Error, but you could also throw ApiError).
  */
-export const client = ({ apiBaseUrl: baseUrl }: { apiBaseUrl: string }): Client => {
-  // Ensure base URL ends with a slash
-  apiBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+async function parseErrorResponse(response: Response): Promise<Error> {
+  let errorMessage = 'API request failed';
+  try {
+    const errorData: ApiErrorData = await response.json();
+    if (errorData.error) {
+      errorMessage = errorData.error;
+    } else if (errorData.errors) {
+      // Combine all error messages
+      errorMessage = Object.values(errorData.errors).flat().join(', ');
+    } else {
+      errorMessage = errorData.message || errorMessage;
+    }
+  } catch {
+    const text = await response.text();
+    errorMessage = text || response.statusText || errorMessage;
+  }
+  errorMessage = `(${response.status}) ${errorMessage}`;
+  return new Error(errorMessage);
+}
+
+/*******************************************************
+ * The main exported factory function to create our client
+ *******************************************************/
+
+// TODO: Gestire l'enable log e fare dei test
+export function client(config: ClientConfig): Client {
+  // Set up global logging / retry settings
+  enableLogging = !!config.enableLogging;
+  maxRetries = config.maxRetries ?? 1;
+  baseUrl = normalizeBaseUrl(config.apiBaseUrl);
+
+  // Log the configured base URL, if logging is enabled
+  log(enableLogging, 'Craft Commerce using base URL:', baseUrl);
 
   /**
-   * Makes a POST request with the CSRF token.
-   * @param endpoint - The endpoint to send the request to.
-   * @param payload - The payload to send.
-   * @param options - Request options such as headers.
-   * @param retryCount - Internal counter for retry attempts.
-   * @returns The server response.
+   * The POST method implementation.
+   * Tries to use the CSRF token; if invalid, resets and retries up to maxRetries times.
    */
   const post = async (
     endpoint: string,
@@ -123,39 +207,58 @@ export const client = ({ apiBaseUrl: baseUrl }: { apiBaseUrl: string }): Client 
         csrfToken = await fetchCsrfToken();
       }
 
-      const { accept = 'application/json', contentType = 'application/json', ...headers } = options;
+      const {
+        accept = 'application/json',
+        contentType = 'application/json',
+        ...headers
+      } = options;
       const body = payload !== undefined ? JSON.stringify(payload) : undefined;
 
-      const response = await fetch(`${apiBaseUrl}${endpoint}`, {
+      log(enableLogging, 'Craft Commerce POST request:', endpoint, {
+        retryCount,
+        body,
+      });
+
+      const response = await fetch(`${baseUrl}${endpoint}`, {
         method: 'POST',
         headers: {
           'Content-Type': contentType,
           Accept: accept,
-          'X-CSRF-Token': csrfToken,
+          'X-CSRF-Token': csrfToken!,
           'X-Requested-With': 'XMLHttpRequest',
           ...headers,
         },
         body,
-        credentials: 'include', // Include cookies in the request
+        credentials: 'include',
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error(`API POST error (${endpoint}):`, errorData.message || 'API request failed');
+        const errorData: ApiErrorData = await response.json().catch(() => ({}));
 
-        // Handle CSRF token expiration or invalidity
+        log(enableLogging, 'Craft Commerce POST error data:', errorData);
+
         if (
-          retryCount < MAX_RETRIES &&
+          retryCount < maxRetries &&
           response.status === 400 &&
           errorData.message === 'Unable to verify your data submission.'
         ) {
-          console.warn('CSRF token expired or invalid. Retrying...');
-          csrfToken = null; // Reset the CSRF token
-          return await post(endpoint, payload, options, retryCount + 1);
+          // Possibly a CSRF error, let's retry
+          console.warn('CSRF token invalid. Retrying request...');
+          csrfToken = null;
+          return post(endpoint, payload, options, retryCount + 1);
         }
 
-        const errorMessage = errorData.message || `API request failed with status ${response.status}`;
-        throw new ApiError(errorMessage, response.status, errorData);
+        const errorMessage =
+          errorData.message ||
+          `API request failed with status ${response.status}`;
+        throw new ApiError(
+          errorMessage,
+          response.status,
+          errorData,
+          endpoint,
+          'POST',
+          retryCount
+        );
       }
 
       if (accept === 'application/pdf') {
@@ -164,17 +267,14 @@ export const client = ({ apiBaseUrl: baseUrl }: { apiBaseUrl: string }): Client 
 
       return await response.json();
     } catch (error) {
-      console.error(error);
+      log(enableLogging, 'Craft Commerce POST caught error:', error);
       throw error;
     }
   };
 
   /**
-   * Makes a GET request.
-   * @param endpoint - The endpoint to send the request to.
-   * @param params - Query string parameters as a key/value record.
-   * @param options - Request options such as headers.
-   * @returns The server response.
+   * The GET method implementation.
+   * Creates a query string from 'params' and throws an error on non-OK responses.
    */
   const get = async (
     endpoint: string,
@@ -183,13 +283,15 @@ export const client = ({ apiBaseUrl: baseUrl }: { apiBaseUrl: string }): Client 
   ): Promise<any> => {
     try {
       const { accept = 'application/json', ...headers } = options;
-      const url = new URL(endpoint, apiBaseUrl);
+      const url = new URL(endpoint, baseUrl);
 
       Object.keys(params).forEach((key) => {
         if (params[key] !== undefined && params[key] !== null) {
           url.searchParams.append(key, String(params[key]));
         }
       });
+
+      log(enableLogging, 'Craft Commerce GET request:', url.toString());
 
       const response = await fetch(url.toString(), {
         method: 'GET',
@@ -203,7 +305,8 @@ export const client = ({ apiBaseUrl: baseUrl }: { apiBaseUrl: string }): Client 
 
       if (!response.ok) {
         console.error(`API GET error (${endpoint}):`, await response.text());
-        throw await parseErrorResponse(response);
+        const error = await parseErrorResponse(response);
+        throw error;
       }
 
       if (accept === 'application/pdf') {
@@ -212,41 +315,10 @@ export const client = ({ apiBaseUrl: baseUrl }: { apiBaseUrl: string }): Client 
 
       return await response.json();
     } catch (error) {
-      console.error(error);
+      log(enableLogging, 'Craft Commerce GET caught error:', error);
       throw error;
     }
   };
 
-  return {
-    post,
-    get,
-  };
-};
-
-/**
- * Helper function to parse error responses.
- * @param response - The Response object returned from fetch.
- * @returns An Error object with the extracted message.
- */
-const parseErrorResponse = async (response: Response): Promise<Error> => {
-  let errorMessage = 'API request failed';
-  try {
-    const errorData = await response.json();
-    if (errorData.error) {
-      errorMessage = errorData.error;
-    } else if (errorData.errors) {
-      if (typeof errorData.errors === 'object') {
-        errorMessage = Object.values(errorData.errors).flat().join(', ');
-      } else {
-        errorMessage = errorData.errors;
-      }
-    } else {
-      errorMessage = errorData.message || errorMessage;
-    }
-  } catch (jsonError) {
-    const text = await response.text();
-    errorMessage = text || response.statusText || errorMessage;
-  }
-  errorMessage = `(${response.status}) ${errorMessage}`;
-  return new Error(errorMessage);
-};
+  return { post, get };
+}
