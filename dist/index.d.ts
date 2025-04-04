@@ -1,11 +1,21 @@
 /**
- * Initializes the Craft CMS Headless client with the provided API base URL.
- * @param apiBaseUrl - The base URL of the Craft CMS API.
- * @returns An object exposing the initialized client and associated functionalities.
+ * Configuration interface for initializing the SDK.
  */
-export declare const craftCommerceHeadlessSdk: ({ apiBaseUrl, }: {
+export interface CraftCommerceHeadlessSdkConfig {
+    /** Base URL of the Craft CMS API */
     apiBaseUrl: string;
-}) => {
+    /** Optional flag to enable/disable logging (default: false) */
+    enableLogging?: boolean;
+    /** Maximum number of retries on CSRF errors (default defined in client) */
+    maxRetries?: number;
+}
+/**
+ * Initializes the Craft CMS Headless client with the provided base URL and configuration.
+ *
+ * @param config - Configuration object containing apiBaseUrl, enableLogging, and maxRetries.
+ * @returns An object exposing the client and associated functionalities.
+ */
+export declare const craftCommerceHeadlessSdk: ({ apiBaseUrl, enableLogging, maxRetries, }: CraftCommerceHeadlessSdkConfig) => {
     client: import("./api/client").Client;
     users: {
         loginUser: (userData: import("./api/users").UserLoginData) => Promise<any>;
@@ -40,8 +50,8 @@ export declare const craftCommerceHeadlessSdk: ({ apiBaseUrl, }: {
         reactivate: (subscriptionData: import("./api/subscriptions").ReactivateData) => Promise<any>;
     };
 };
-export type * from './api/users';
-export type * from './api/cart';
-export type * from './api/payment-source';
-export type * from './api/payment';
-export type * from './api/subscriptions';
+export * from './api/users';
+export * from './api/cart';
+export * from './api/payment-source';
+export * from './api/payment';
+export * from './api/subscriptions';

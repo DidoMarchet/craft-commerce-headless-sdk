@@ -1,54 +1,66 @@
 /**
- * Importing necessary modules for handling different Craft CMS functionalities.
+ * Import necessary modules for handling different Craft CMS functionalities.
  */
-import { client } from './api/client'; // Import client and its type
-import { users } from './api/users'; // Import functions and types
-import { cart } from './api/cart'; // Import cart functions
-import { paymentSources } from './api/payment-source'; // Import payment functions
-import { payment } from './api/payment'; // Import payment functions
-import { subscriptions } from './api/subscriptions'; // Import subscription functions
+import { client } from './api/client';
+import { users } from './api/users';
+import { cart } from './api/cart';
+import { paymentSources } from './api/payment-source';
+import { payment } from './api/payment';
+import { subscriptions } from './api/subscriptions';
 
 /**
- * Initializes the Craft CMS Headless client with the provided API base URL.
- * @param apiBaseUrl - The base URL of the Craft CMS API.
- * @returns An object exposing the initialized client and associated functionalities.
+ * Configuration interface for initializing the SDK.
  */
+export interface CraftCommerceHeadlessSdkConfig {
+  /** Base URL of the Craft CMS API */
+  apiBaseUrl: string;
+  /** Optional flag to enable/disable logging (default: false) */
+  enableLogging?: boolean;
+  /** Maximum number of retries on CSRF errors (default defined in client) */
+  maxRetries?: number;
+}
 
+/**
+ * Initializes the Craft CMS Headless client with the provided base URL and configuration.
+ *
+ * @param config - Configuration object containing apiBaseUrl, enableLogging, and maxRetries.
+ * @returns An object exposing the client and associated functionalities.
+ */
 export const craftCommerceHeadlessSdk = ({
   apiBaseUrl,
-}: {
-  apiBaseUrl: string;
-}) => {
-  // Initialize the client with the base URL
-  const craftClient = client({ apiBaseUrl });
+  enableLogging = false,
+  maxRetries,
+}: CraftCommerceHeadlessSdkConfig) => {
+  // Force enableLogging to always be a boolean
+  const _enableLogging = !!enableLogging;
 
-  // Pass the initialized client to the user functions
+  // Initialize the client with the complete configuration
+  const craftClient = client({
+    apiBaseUrl,
+    enableLogging: _enableLogging,
+    maxRetries,
+  });
+
+  // Initialize functionalities from various modules using the configured client
   const userFunctions = users(craftClient);
-
-  // Pass the initialized client to the cart functions
   const cartFunctions = cart(craftClient);
-
-  // Pass the initialized client to the payment sources functions
   const paymentSourcesFunctions = paymentSources(craftClient);
-
-  // Pass the initialized client to the payment functions
   const paymentFunctions = payment(craftClient);
-
-  // Pass the initialized client to the subscription functions
   const subscriptionFunctions = subscriptions(craftClient);
 
   return {
-    client: craftClient, // Expose the client (if needed)
-    users: userFunctions, // Expose the user functions
-    cart: cartFunctions, // Expose the cart functions
-    paymentSources: paymentSourcesFunctions, // Expose the payment sources functions
-    payment: paymentFunctions, // Expose the payment functions
-    subscriptions: subscriptionFunctions, // Expose the subscription functions
+    client: craftClient,
+    users: userFunctions,
+    cart: cartFunctions,
+    paymentSources: paymentSourcesFunctions,
+    payment: paymentFunctions,
+    subscriptions: subscriptionFunctions,
   };
 };
 
-export type * from './api/users';
-export type * from './api/cart';
-export type * from './api/payment-source';
-export type * from './api/payment';
-export type * from './api/subscriptions';
+// Re-export modules (both types and functions)
+export * from './api/users';
+export * from './api/cart';
+export * from './api/payment-source';
+export * from './api/payment';
+export * from './api/subscriptions';
