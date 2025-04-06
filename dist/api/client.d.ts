@@ -6,7 +6,7 @@
  * with enhanced error handling and optional logging.
  *******************************************************/
 /**
- * Example of a stricter error data interface.
+ * A stricter error data interface.
  * Adjust it to match your actual API error structure.
  */
 interface ApiErrorData {
@@ -50,8 +50,9 @@ export interface Client {
     post: (endpoint: string, payload?: any, options?: FetchOptions) => Promise<any>;
     get: (endpoint: string, params?: Record<string, any>, options?: FetchOptions) => Promise<any>;
 }
-/*******************************************************
- * The main exported factory function to create our client
- *******************************************************/
+/**
+ * The main exported factory function to create our client.
+ * Encapsulates configuration variables within the client instance.
+ */
 export declare function client(config: ClientConfig): Client;
 export {};
