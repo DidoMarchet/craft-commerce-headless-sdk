@@ -12,7 +12,7 @@ import { getCookie } from '../utils/cookie';
  * A stricter error data interface.
  * Adjust it to match your actual API error structure.
  */
-interface ApiErrorData {
+interface CraftCommerceSdkErrorData {
   message?: string;
   error?: string;
   errors?: Record<string, string[]>;
@@ -48,9 +48,9 @@ interface ClientConfig {
  * Our custom API Error class for non-2xx responses.
  * Now includes endpoint, method, and the number of retries performed.
  */
-export class ApiError extends Error {
+export class CraftCommerceSdkError extends Error {
   status: number;
-  data: ApiErrorData;
+  data: CraftCommerceSdkErrorData;
   endpoint: string;
   method: string;
   retryCount: number;
@@ -58,20 +58,20 @@ export class ApiError extends Error {
   constructor(
     message: string,
     status: number,
-    data: ApiErrorData,
+    data: CraftCommerceSdkErrorData,
     endpoint: string,
     method: string,
     retryCount: number
   ) {
     super(message);
-    this.name = 'ApiError';
+    this.name = 'CraftCommerceSdkError';
     this.status = status;
     this.data = data;
     this.endpoint = endpoint;
     this.method = method;
     this.retryCount = retryCount;
     // Maintain the correct prototype chain
-    Object.setPrototypeOf(this, ApiError.prototype);
+    Object.setPrototypeOf(this, CraftCommerceSdkError.prototype);
   }
 }
 
@@ -128,9 +128,9 @@ async function fetchCsrfToken(baseUrl: string, enableLogging: boolean): Promise<
   });
 
   if (!response.ok) {
-    const errorData: ApiErrorData = await response.json().catch(() => ({}));
+    const errorData: CraftCommerceSdkErrorData = await response.json().catch(() => ({}));
     const errorMessage = errorData.message || `Failed to fetch CSRF token with status ${response.status}`;
-    throw new ApiError(errorMessage, response.status, errorData, 'actions/users/session-info', 'GET', 0);
+    throw new CraftCommerceSdkError(errorMessage, response.status, errorData, 'actions/users/session-info', 'GET', 0);
   }
 
   const session: SessionInfo = await response.json();
@@ -139,16 +139,16 @@ async function fetchCsrfToken(baseUrl: string, enableLogging: boolean): Promise<
 
 /**
  * Improved function to parse error responses.
- * Checks the Content-Type and returns an ApiError with the appropriate details.
+ * Checks the Content-Type and returns an CraftCommerceSdkError with the appropriate details.
  */
 async function improvedParseErrorResponse(
   response: Response,
   endpoint: string,
   method: string,
   retryCount: number
-): Promise<ApiError> {
+): Promise<CraftCommerceSdkError> {
   let errorMessage = 'API request failed';
-  let errorData: ApiErrorData = {};
+  let errorData: CraftCommerceSdkErrorData = {};
   try {
     const contentType = response.headers.get('Content-Type') || '';
     if (contentType.includes('application/json')) {
@@ -168,7 +168,7 @@ async function improvedParseErrorResponse(
     errorMessage = response.statusText || errorMessage;
   }
   errorMessage = `(${response.status}) ${errorMessage}`;
-  return new ApiError(errorMessage, response.status, errorData, endpoint, method, retryCount);
+  return new CraftCommerceSdkError(errorMessage, response.status, errorData, endpoint, method, retryCount);
 }
 
 /**
@@ -186,7 +186,7 @@ export function client(config: ClientConfig): Client {
 
   /**
    * POST method implementation.
-   * Uses CSRF token, handles retries, and wraps errors in ApiError.
+   * Uses CSRF token, handles retries, and wraps errors in CraftCommerceSdkError.
    */
   const post = async (
     endpoint: string,
@@ -222,7 +222,7 @@ export function client(config: ClientConfig): Client {
       });
 
       if (!response.ok) {
-        let errorData: ApiErrorData = {};
+        let errorData: CraftCommerceSdkErrorData = {};
         const contentTypeHeader = response.headers.get('Content-Type') || '';
         if (contentTypeHeader.includes('application/json')) {
           errorData = await response.json().catch(() => ({}));
@@ -242,7 +242,7 @@ export function client(config: ClientConfig): Client {
           return post(endpoint, payload, options, retryCount + 1);
         }
 
-        throw new ApiError(
+        throw new CraftCommerceSdkError(
           errorData.message || `API request failed with status ${response.status}`,
           response.status,
           errorData,
@@ -259,7 +259,7 @@ export function client(config: ClientConfig): Client {
       // Retrieve response body text to handle empty responses
       const text = await response.text();
       if (!text) {
-        throw new ApiError(`(${response.status}) Empty response`, response.status, {}, endpoint, 'POST', retryCount);
+        throw new CraftCommerceSdkError(`(${response.status}) Empty response`, response.status, {}, endpoint, 'POST', retryCount);
       }
       try {
         return JSON.parse(text);
@@ -269,8 +269,8 @@ export function client(config: ClientConfig): Client {
       }
     } catch (error: any) {
       log(localEnableLogging, 'Craft Commerce POST caught error:', error);
-      if (!(error instanceof ApiError)) {
-        throw new ApiError(
+      if (!(error instanceof CraftCommerceSdkError)) {
+        throw new CraftCommerceSdkError(
           error.message || 'Unknown error',
           0,
           {},
@@ -325,7 +325,7 @@ export function client(config: ClientConfig): Client {
 
       const text = await response.text();
       if (!text) {
-        throw new ApiError(`(${response.status}) Empty response`, response.status, {}, endpoint, 'GET', 0);
+        throw new CraftCommerceSdkError(`(${response.status}) Empty response`, response.status, {}, endpoint, 'GET', 0);
       }
       try {
         return JSON.parse(text);
@@ -334,8 +334,8 @@ export function client(config: ClientConfig): Client {
       }
     } catch (error: any) {
       log(localEnableLogging, 'Craft Commerce GET caught error:', error);
-      if (!(error instanceof ApiError)) {
-        throw new ApiError(
+      if (!(error instanceof CraftCommerceSdkError)) {
+        throw new CraftCommerceSdkError(
           error.message || 'Unknown error',
           0,
           {},
