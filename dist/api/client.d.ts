@@ -9,7 +9,7 @@
  * A stricter error data interface.
  * Adjust it to match your actual API error structure.
  */
-interface ApiErrorData {
+interface CraftCommerceSdkErrorData {
     message?: string;
     error?: string;
     errors?: Record<string, string[]>;
@@ -35,13 +35,13 @@ interface ClientConfig {
  * Our custom API Error class for non-2xx responses.
  * Now includes endpoint, method, and the number of retries performed.
  */
-export declare class ApiError extends Error {
+export declare class CraftCommerceSdkError extends Error {
     status: number;
-    data: ApiErrorData;
+    data: CraftCommerceSdkErrorData;
     endpoint: string;
     method: string;
     retryCount: number;
-    constructor(message: string, status: number, data: ApiErrorData, endpoint: string, method: string, retryCount: number);
+    constructor(message: string, status: number, data: CraftCommerceSdkErrorData, endpoint: string, method: string, retryCount: number);
 }
 /**
  * Our final client interface with post and get methods.

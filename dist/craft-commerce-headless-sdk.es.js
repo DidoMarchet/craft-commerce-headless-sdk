@@ -1,6 +1,6 @@
-var b = Object.defineProperty;
-var S = (t, s, r) => s in t ? b(t, s, { enumerable: !0, configurable: !0, writable: !0, value: r }) : t[s] = r;
-var g = (t, s, r) => (S(t, typeof s != "symbol" ? s + "" : s, r), r);
+var S = Object.defineProperty;
+var b = (t, s, r) => s in t ? S(t, s, { enumerable: !0, configurable: !0, writable: !0, value: r }) : t[s] = r;
+var g = (t, s, r) => (b(t, typeof s != "symbol" ? s + "" : s, r), r);
 const v = (t) => /^[a-zA-Z0-9.-]+$/.test(t), E = (t, s) => {
   var e;
   if (!v(s))
@@ -16,16 +16,16 @@ class l extends Error {
     g(this, "endpoint");
     g(this, "method");
     g(this, "retryCount");
-    this.name = "ApiError", this.status = o, this.data = e, this.endpoint = a, this.method = u, this.retryCount = c, Object.setPrototypeOf(this, l.prototype);
+    this.name = "CraftCommerceSdkError", this.status = o, this.data = e, this.endpoint = a, this.method = u, this.retryCount = c, Object.setPrototypeOf(this, l.prototype);
   }
 }
 function f(t, ...s) {
   t && console.log(...s);
 }
-function R(t) {
+function C(t) {
   return t.endsWith("/") ? t : t + "/";
 }
-async function x(t, s) {
+async function R(t, s) {
   let o = E("CRAFT_CSRF_TOKEN", t);
   if (o)
     return o;
@@ -48,19 +48,19 @@ async function k(t, s, r, o) {
   }
   return e = `(${t.status}) ${e}`, new l(e, t.status, a, s, r, o);
 }
-function C(t) {
-  const s = !!t.enableLogging, r = t.maxRetries ?? 1, o = R(t.apiBaseUrl);
+function x(t) {
+  const s = !!t.enableLogging, r = t.maxRetries ?? 1, o = C(t.apiBaseUrl);
   let e = null;
   f(s, "Craft Commerce using base URL:", o);
-  const a = async (c, m, n = {}, p = 0) => {
+  const a = async (c, p, n = {}, m = 0) => {
     try {
-      e || (e = await x(o, s));
+      e || (e = await R(o, s));
       const {
         accept: d = "application/json",
         contentType: T = "application/json",
         ...w
-      } = n, y = m !== void 0 ? JSON.stringify(m) : void 0;
-      f(s, "Craft Commerce POST request:", c, { retryCount: p, body: y });
+      } = n, y = p !== void 0 ? JSON.stringify(p) : void 0;
+      f(s, "Craft Commerce POST request:", c, { retryCount: m, body: y });
       const i = await fetch(`${o}${c}`, {
         method: "POST",
         headers: {
@@ -75,22 +75,22 @@ function C(t) {
       });
       if (!i.ok) {
         let h = {};
-        if ((i.headers.get("Content-Type") || "").includes("application/json") ? h = await i.json().catch(() => ({})) : h = { message: await i.text() }, f(s, "Craft Commerce POST error data:", h), p < r && i.status === 400 && h.message === "Unable to verify your data submission.")
-          return console.warn("CSRF token invalid. Retrying request..."), e = null, a(c, m, n, p + 1);
+        if ((i.headers.get("Content-Type") || "").includes("application/json") ? h = await i.json().catch(() => ({})) : h = { message: await i.text() }, f(s, "Craft Commerce POST error data:", h), m < r && i.status === 400 && h.message === "Unable to verify your data submission.")
+          return console.warn("CSRF token invalid. Retrying request..."), e = null, a(c, p, n, m + 1);
         throw new l(
           h.message || `API request failed with status ${i.status}`,
           i.status,
           h,
           c,
           "POST",
-          p
+          m
         );
       }
       if (d === "application/pdf")
         return await i.blob();
       const P = await i.text();
       if (!P)
-        throw new l(`(${i.status}) Empty response`, i.status, {}, c, "POST", p);
+        throw new l(`(${i.status}) Empty response`, i.status, {}, c, "POST", m);
       try {
         return JSON.parse(P);
       } catch {
@@ -103,20 +103,20 @@ function C(t) {
         {},
         c,
         "POST",
-        p
+        m
       );
     }
   };
-  return { post: a, get: async (c, m = {}, n = {}) => {
+  return { post: a, get: async (c, p = {}, n = {}) => {
     try {
-      const { accept: p = "application/json", ...d } = n, T = new URL(c, o);
-      Object.keys(m).forEach((i) => {
-        m[i] !== void 0 && m[i] !== null && T.searchParams.append(i, String(m[i]));
+      const { accept: m = "application/json", ...d } = n, T = new URL(c, o);
+      Object.keys(p).forEach((i) => {
+        p[i] !== void 0 && p[i] !== null && T.searchParams.append(i, String(p[i]));
       }), f(s, "Craft Commerce GET request:", T.toString());
       const w = await fetch(T.toString(), {
         method: "GET",
         headers: {
-          Accept: p,
+          Accept: m,
           "X-Requested-With": "XMLHttpRequest",
           ...d
         },
@@ -124,7 +124,7 @@ function C(t) {
       });
       if (!w.ok)
         throw console.error(`API GET error (${c}):`, await w.text()), await k(w, c, "GET", 0);
-      if (p === "application/pdf")
+      if (m === "application/pdf")
         return await w.blob();
       const y = await w.text();
       if (!y)
@@ -134,9 +134,9 @@ function C(t) {
       } catch {
         return y;
       }
-    } catch (p) {
-      throw f(s, "Craft Commerce GET caught error:", p), p instanceof l ? p : new l(
-        p.message || "Unknown error",
+    } catch (m) {
+      throw f(s, "Craft Commerce GET caught error:", m), m instanceof l ? m : new l(
+        m.message || "Unknown error",
         0,
         {},
         c,
@@ -173,7 +173,7 @@ const O = (t) => ({
     "actions/commerce/cart/update-cart",
     u
   )
-}), A = (t) => ({
+}), U = (t) => ({
   addPaymentSource: async (e) => await t.post(
     "actions/commerce/payment-sources/add",
     e
@@ -186,13 +186,13 @@ const O = (t) => ({
     "actions/commerce/payment-sources/delete",
     e
   )
-}), U = (t) => ({
+}), $ = (t) => ({
   completePayment: async (o) => await t.get(
     "actions/commerce/payments/complete-payment",
     o
   ),
   pay: async (o) => await t.post("actions/commerce/payments/pay", o)
-}), $ = (t) => ({
+}), A = (t) => ({
   subscribe: async (a) => await t.post(
     "actions/commerce/subscriptions/subscribe",
     a
@@ -214,25 +214,25 @@ const O = (t) => ({
   enableLogging: s = !1,
   maxRetries: r
 }) => {
-  const e = C({
+  const e = x({
     apiBaseUrl: t,
     enableLogging: !!s,
     maxRetries: r
-  }), a = O(e), u = j(e), c = A(e), m = U(e), n = $(e);
+  }), a = O(e), u = j(e), c = U(e), p = $(e), n = A(e);
   return {
     client: e,
     users: a,
     cart: u,
     paymentSources: c,
-    payment: m,
+    payment: p,
     subscriptions: n
   };
 };
 export {
   j as cart,
   G as craftCommerceHeadlessSdk,
-  U as payment,
-  A as paymentSources,
-  $ as subscriptions,
+  $ as payment,
+  U as paymentSources,
+  A as subscriptions,
   O as users
 };
