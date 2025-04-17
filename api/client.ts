@@ -12,7 +12,7 @@ import { getCookie } from '../utils/cookie';
  * A stricter error data interface.
  * Adjust it to match your actual API error structure.
  */
-interface CraftCommerceSdkErrorData {
+export interface CraftCommerceSdkErrorData {
   message?: string;
   error?: string;
   errors?: Record<string, string[]>;
@@ -22,7 +22,7 @@ interface CraftCommerceSdkErrorData {
 /**
  * A session info interface for the CSRF token response.
  */
-interface SessionInfo {
+export interface SessionInfo {
   csrfTokenValue: string;
 }
 
@@ -38,7 +38,7 @@ export interface FetchOptions {
 /**
  * Configuration for enabling or disabling logs and controlling retries.
  */
-interface ClientConfig {
+export interface ClientConfig {
   apiBaseUrl: string;           // Base URL of your Craft CMS API
   enableLogging?: boolean;      // If true, logs to console
   maxRetries?: number;          // Max number of times to retry on CSRF errors

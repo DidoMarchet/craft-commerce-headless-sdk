@@ -9,11 +9,17 @@
  * A stricter error data interface.
  * Adjust it to match your actual API error structure.
  */
-interface CraftCommerceSdkErrorData {
+export interface CraftCommerceSdkErrorData {
     message?: string;
     error?: string;
     errors?: Record<string, string[]>;
     [key: string]: any;
+}
+/**
+ * A session info interface for the CSRF token response.
+ */
+export interface SessionInfo {
+    csrfTokenValue: string;
 }
 /**
  * Options for controlling log behavior, specifying the accepted/sent content type, etc.
@@ -26,7 +32,7 @@ export interface FetchOptions {
 /**
  * Configuration for enabling or disabling logs and controlling retries.
  */
-interface ClientConfig {
+export interface ClientConfig {
     apiBaseUrl: string;
     enableLogging?: boolean;
     maxRetries?: number;
@@ -55,4 +61,3 @@ export interface Client {
  * Encapsulates configuration variables within the client instance.
  */
 export declare function client(config: ClientConfig): Client;
-export {};
