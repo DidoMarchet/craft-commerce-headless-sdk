@@ -50,6 +50,7 @@ export declare const craftCommerceHeadlessSdk: ({ apiBaseUrl, enableLogging, max
         reactivate: (subscriptionData: import("./api/subscriptions").ReactivateData) => Promise<any>;
     };
 };
+export * from './api/client';
 export * from './api/users';
 export * from './api/cart';
 export * from './api/payment-source';

@@ -59,6 +59,7 @@ export const craftCommerceHeadlessSdk = ({
 };
 
 // Re-export modules (both types and functions)
+export * from './api/client';
 export * from './api/users';
 export * from './api/cart';
 export * from './api/payment-source';
