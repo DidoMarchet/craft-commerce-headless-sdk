@@ -30,18 +30,18 @@ export interface SessionInfo {
  * Options for controlling log behavior, specifying the accepted/sent content type, etc.
  */
 export interface FetchOptions {
-  accept?: string;              // e.g., 'application/json'
-  contentType?: string;         // e.g., 'application/json'
-  [header: string]: any;        // Additional custom headers
+  accept?: string; // e.g., 'application/json'
+  contentType?: string; // e.g., 'application/json'
+  [header: string]: any; // Additional custom headers
 }
 
 /**
  * Configuration for enabling or disabling logs and controlling retries.
  */
 export interface ClientConfig {
-  apiBaseUrl: string;           // Base URL of your Craft CMS API
-  enableLogging?: boolean;      // If true, logs to console
-  maxRetries?: number;          // Max number of times to retry on CSRF errors
+  apiBaseUrl: string; // Base URL of your Craft CMS API
+  enableLogging?: boolean; // If true, logs to console
+  maxRetries?: number; // Max number of times to retry on CSRF errors
 }
 
 /**
@@ -115,9 +115,12 @@ function normalizeBaseUrl(url: string): string {
 /**
  * Attempts to fetch the CSRF token from cookies or from the server.
  */
-async function fetchCsrfToken(baseUrl: string, enableLogging: boolean): Promise<string> {
+async function fetchCsrfToken(
+  baseUrl: string,
+  enableLogging: boolean
+): Promise<string> {
   const cookieName = 'CRAFT_CSRF_TOKEN';
-  let csrfToken = getCookie(cookieName, baseUrl);
+  const csrfToken = getCookie(cookieName, baseUrl);
   if (csrfToken) {
     return csrfToken;
   }
@@ -128,9 +131,20 @@ async function fetchCsrfToken(baseUrl: string, enableLogging: boolean): Promise<
   });
 
   if (!response.ok) {
-    const errorData: CraftCommerceSdkErrorData = await response.json().catch(() => ({}));
-    const errorMessage = errorData.message || `Failed to fetch CSRF token with status ${response.status}`;
-    throw new CraftCommerceSdkError(errorMessage, response.status, errorData, 'actions/users/session-info', 'GET', 0);
+    const errorData: CraftCommerceSdkErrorData = await response
+      .json()
+      .catch(() => ({}));
+    const errorMessage =
+      errorData.message ||
+      `Failed to fetch CSRF token with status ${response.status}`;
+    throw new CraftCommerceSdkError(
+      errorMessage,
+      response.status,
+      errorData,
+      'actions/users/session-info',
+      'GET',
+      0
+    );
   }
 
   const session: SessionInfo = await response.json();
@@ -138,10 +152,16 @@ async function fetchCsrfToken(baseUrl: string, enableLogging: boolean): Promise<
 }
 
 /**
- * Improved function to parse error responses.
- * Checks the Content-Type and returns an CraftCommerceSdkError with the appropriate details.
+ * Parses a Fetch API error response and converts it to a CraftCommerceSdkError instance.
+ *
+ * @async
+ * @param {Response} response The Fetch API response.
+ * @param {string} endpoint The URL used in the Fetch API request.
+ * @param {string} method The HTTP method used in the Fetch API request.
+ * @param {number} retryCount The number of retry requests prior to handling the error.
+ * @returns {Promise<CraftCommerceSdkError>}
  */
-async function improvedParseErrorResponse(
+async function errorResponseToSdkError(
   response: Response,
   endpoint: string,
   method: string,
@@ -162,20 +182,28 @@ async function improvedParseErrorResponse(
       }
     } else {
       // If not JSON, use plain text
-      errorMessage = await response.text() || response.statusText || errorMessage;
+      errorMessage =
+        (await response.text()) || response.statusText || errorMessage;
     }
   } catch {
     errorMessage = response.statusText || errorMessage;
   }
   errorMessage = `(${response.status}) ${errorMessage}`;
-  return new CraftCommerceSdkError(errorMessage, response.status, errorData, endpoint, method, retryCount);
+  return new CraftCommerceSdkError(
+    errorMessage,
+    response.status,
+    errorData,
+    endpoint,
+    method,
+    retryCount
+  );
 }
 
 /**
  * The main exported factory function to create our client.
  * Encapsulates configuration variables within the client instance.
  */
-export function client(config: ClientConfig): Client {
+export const client = (config: ClientConfig): Client => {
   // Local configuration variables for this client instance
   const localEnableLogging = !!config.enableLogging;
   const localMaxRetries = config.maxRetries ?? 1;
@@ -206,7 +234,10 @@ export function client(config: ClientConfig): Client {
       } = options;
       const body = payload !== undefined ? JSON.stringify(payload) : undefined;
 
-      log(localEnableLogging, 'Craft Commerce POST request:', endpoint, { retryCount, body });
+      log(localEnableLogging, 'Craft Commerce POST request:', endpoint, {
+        retryCount,
+        body,
+      });
 
       const response = await fetch(`${localBaseUrl}${endpoint}`, {
         method: 'POST',
@@ -243,7 +274,8 @@ export function client(config: ClientConfig): Client {
         }
 
         throw new CraftCommerceSdkError(
-          errorData.message || `API request failed with status ${response.status}`,
+          errorData.message ||
+            `API request failed with status ${response.status}`,
           response.status,
           errorData,
           endpoint,
@@ -259,7 +291,14 @@ export function client(config: ClientConfig): Client {
       // Retrieve response body text to handle empty responses
       const text = await response.text();
       if (!text) {
-        throw new CraftCommerceSdkError(`(${response.status}) Empty response`, response.status, {}, endpoint, 'POST', retryCount);
+        throw new CraftCommerceSdkError(
+          `(${response.status}) Empty response`,
+          response.status,
+          {},
+          endpoint,
+          'POST',
+          retryCount
+        );
       }
       try {
         return JSON.parse(text);
@@ -316,7 +355,7 @@ export function client(config: ClientConfig): Client {
 
       if (!response.ok) {
         console.error(`API GET error (${endpoint}):`, await response.text());
-        throw await improvedParseErrorResponse(response, endpoint, 'GET', 0);
+        throw await errorResponseToSdkError(response, endpoint, 'GET', 0);
       }
 
       if (accept === 'application/pdf') {
@@ -325,7 +364,14 @@ export function client(config: ClientConfig): Client {
 
       const text = await response.text();
       if (!text) {
-        throw new CraftCommerceSdkError(`(${response.status}) Empty response`, response.status, {}, endpoint, 'GET', 0);
+        throw new CraftCommerceSdkError(
+          `(${response.status}) Empty response`,
+          response.status,
+          {},
+          endpoint,
+          'GET',
+          0
+        );
       }
       try {
         return JSON.parse(text);
@@ -349,4 +395,4 @@ export function client(config: ClientConfig): Client {
   };
 
   return { post, get };
-}
+};

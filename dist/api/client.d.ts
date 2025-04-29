@@ -60,4 +60,4 @@ export interface Client {
  * The main exported factory function to create our client.
  * Encapsulates configuration variables within the client instance.
  */
-export declare function client(config: ClientConfig): Client;
+export declare const client: (config: ClientConfig) => Client;
