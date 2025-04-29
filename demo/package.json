@@ -4,6 +4,7 @@
   "description": "Demo for Craft Commerce Headless SDK",
   "scripts": {
     "dev": "vite",
+    "test": "npx tsc",
     "build": "vite build",
     "serve": "vite preview"
   },
